@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
 const app = express();
+app.use(express.json());
 const connStr: string = process.env.CONNECTION_STRING!;
 mongoose
   .connect(connStr)
