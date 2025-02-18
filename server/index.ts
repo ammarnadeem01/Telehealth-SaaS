@@ -1,10 +1,10 @@
-import express from "express";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config({ path: "./config.env" });
-const app = express();
-app.use(express.json());
+import app from "./app";
+import mongoose from "mongoose";
+
 const connStr: string = process.env.CONNECTION_STRING!;
+
 mongoose
   .connect(connStr)
   .then(() => {
@@ -13,6 +13,7 @@ mongoose
   .catch(() => {
     console.log("Database Connection Error");
   });
+
 app.listen(3000, () => {
-  console.log("first");
+  console.log("App started on port", 3000);
 });
