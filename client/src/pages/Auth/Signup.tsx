@@ -108,7 +108,7 @@ const Signup = () => {
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
             disabled={loading}
           >
-            {loading ? "Logging in..." : "Log In"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
         <div className="mt-4 text-center">

@@ -30,7 +30,6 @@ export function generateRefreshToken(userId: mongoose.Types.ObjectId): string {
 }
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     const {
       name,
       email,

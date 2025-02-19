@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { IUser } from "@types/User";
 import useFetch from "@hooks/UseFetch";
 import { useNavigate } from "react-router-dom";
-
+import useUserStore from "@store/userStore";
+import useAuthStore from "@store/authStore";
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -20,7 +21,8 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-
+  const { setUser } = useUserStore();
+  const { setAccessToken } = useAuthStore();
   const { data, loading, error, triggerFetch } = useFetch<IUser>(
     "http://localhost:3000/api/v1/users/login"
   );
@@ -33,6 +35,8 @@ const Login = () => {
     });
     if (!loading && data) {
       console.log(data, error);
+      // setAccessToken(data.token);
+      // setUser
       nav("/signup");
     }
   };
