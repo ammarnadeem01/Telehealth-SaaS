@@ -1,45 +1,45 @@
-// src/pages/Signup.jsx
-// import React from "react";
-import axios from "axios";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useFetch from "@hooks/UseFetch";
+import { IUser } from "@types/User";
 
+const registerSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    email: z
+      .string()
+      .email("Invalid email address")
+      .min(1, "Email is required"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Confirm password is required"),
+    role: z.string().min(1, "Role is required"),
+    phoneNumber: z.string().min(1, "Phone number is required"),
+    address: z.string().min(1, "Address is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+type RegisterFormData = z.infer<typeof registerSchema>;
 const Signup = () => {
+  const { data, loading, error, triggerFetch } = useFetch<IUser>(
+    "http://localhost:3000/api/v1/users/register"
+  );
+  const onSubmit = async (formData: RegisterFormData) => {
+    await triggerFetch({
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+  };
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
-  } = useForm();
-  const [profilePicture, setProfilePicture] = useState(null);
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-    setProfilePicture(file); // Save the file to state
-  };
-  const onSubmit = (data: any) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("email", data.email);
-    formData.append("password", data.password);
-    formData.append("confirmPassword", data.confirmPassword);
-    formData.append("role", data.role);
-    formData.append("phoneNumber", data.phoneNumber);
-    formData.append("address", data.address);
-
-    // Append the profile picture (if any)
-    if (profilePicture) {
-      formData.append("profilePicture", profilePicture);
-    }
-
-    axios
-      .post("http://localhost:3000/api/v1/users/register", formData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -48,71 +48,43 @@ const Signup = () => {
           Sign Up
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Name */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              {...register("name", { required: "Name is required" })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
-            )} */}
-          </div>
-
-          {/* Email */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )} */}
-          </div>
-
-          {/* Password */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              {...register("password", { required: "Password is required" })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )} */}
-          </div>
-
-          {/* Confirm Password */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              {...register("confirmPassword", {
-                required: "Please confirm your password",
-                validate: (value) =>
-                  value === getValues("password") || "Passwords do not match",
-              })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.confirmPassword && (
-              <p className="text-red-500 text-sm">
-                {errors.confirmPassword.message}
-              </p>
-            )} */}
-          </div>
+          {[
+            { label: "Name", type: "text", name: "name" as const },
+            { label: "Email", type: "email", name: "email" as const },
+            { label: "Password", type: "password", name: "password" as const },
+            {
+              label: "Confirm Password",
+              type: "password",
+              name: "confirmPassword" as const,
+            },
+            {
+              label: "Phone Number",
+              type: "text",
+              name: "phoneNumber" as const,
+            },
+            { label: "Address", type: "textarea", name: "address" as const },
+          ].map(({ label, type, name }) => (
+            <div key={name} className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                {label}
+              </label>
+              {type === "textarea" ? (
+                <textarea
+                  {...register(name)}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              ) : (
+                <input
+                  type={type}
+                  {...register(name)}
+                  className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              )}
+              {errors[name] && (
+                <p className="text-red-500 text-sm">{errors[name]?.message}</p>
+              )}
+            </div>
+          ))}
 
           {/* Role */}
           <div className="mb-4">
@@ -120,75 +92,23 @@ const Signup = () => {
               Role
             </label>
             <select
-              {...register("role", { required: "Role is required" })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              {...register("role")}
+              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="user">Doctor</option>
-              <option value="admin"></option>
+              <option value="doctor">Doctor</option>
+              <option value="admin">Admin</option>
             </select>
-            {/* {errors.role && (
+            {errors.role && (
               <p className="text-red-500 text-sm">{errors.role.message}</p>
-            )} */}
+            )}
           </div>
 
-          {/* Phone Number */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              {...register("phoneNumber", {
-                required: "Phone number is required",
-              })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.phoneNumber && (
-              <p className="text-red-500 text-sm">
-                {errors.phoneNumber.message}
-              </p>
-            )} */}
-          </div>
-
-          {/* Address */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Address
-            </label>
-            <textarea
-              {...register("address", { required: "Address is required" })}
-              className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.address && (
-              <p className="text-red-500 text-sm">{errors.address.message}</p>
-            )} */}
-          </div>
-
-          {/* Profile Picture */}
-          <div className="mb-4">
-            <label className="block w-full h-20 text-sm font-medium text-gray-700">
-              Profile Picture
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              //   onChange={handleFileChange}
-              {...register("profilePicture", {
-                required: "Profile picture is required",
-              })}
-              className="w-full absolute hidden p-2 mt-1 px-14 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {/* {errors.profilePicture && (
-              <p className="text-red-500 text-sm">
-                {errors.profilePicture.message}
-              </p>
-            )} */}
-          </div>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
         <div className="mt-4 text-center">
