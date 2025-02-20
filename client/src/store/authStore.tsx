@@ -4,6 +4,7 @@ interface AuthState {
   userId: string | null;
   name: string | null;
   role: string | null;
+  email: string | null;
   avatar: string;
   token: string | null;
   isAuthenticated: boolean;
@@ -13,6 +14,7 @@ interface AuthState {
     avatar: string;
     token: string;
     name: string;
+    email: string;
   }) => void;
   logout: () => void;
   setAvatar: (avatar: string) => void;
@@ -25,6 +27,7 @@ const getStoredAuthData = (): Partial<AuthState> => {
     avatar: localStorage.getItem("avatar") || "../../public/images.jpeg",
     token: localStorage.getItem("token"),
     name: localStorage.getItem("name"),
+    email: localStorage.getItem("email"),
     isAuthenticated: !!localStorage.getItem("token"),
   };
 };
@@ -35,16 +38,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   avatar: "default-avatar.png",
   token: null,
   name: null,
+  email: null,
   isAuthenticated: false,
 
   ...getStoredAuthData(),
 
-  login: ({ userId, role, avatar, token, name }) => {
+  login: ({ userId, role, avatar, token, name, email }) => {
     localStorage.setItem("userId", userId);
     localStorage.setItem("role", role);
     localStorage.setItem("avatar", avatar);
     localStorage.setItem("token", token);
     localStorage.setItem("name", name);
+    localStorage.setItem("email", email);
     set({ userId, role, avatar, token, isAuthenticated: true });
   },
 
@@ -54,6 +59,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("avatar");
     localStorage.removeItem("token");
     localStorage.removeItem("name");
+    localStorage.removeItem("email");
 
     set({
       name: null,
@@ -61,6 +67,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       role: null,
       avatar: "../../public/images.jpeg",
       token: null,
+      email: null,
       isAuthenticated: false,
     });
   },

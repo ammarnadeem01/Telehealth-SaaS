@@ -3,6 +3,7 @@ import User from "@models/User";
 import { IUser } from "@models/User";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import mongoose from "mongoose";
+import { uploadToCloudinary } from "middlewares/cloudinary.middleware";
 interface UserBody {
   email: string;
   password: string;
@@ -164,6 +165,24 @@ export const logoutUser = async (req: Request, res: Response) => {
     res.status(500).json({
       status: "Fail",
       message: "Something went wrong while logging out.",
+    });
+  }
+};
+
+export const uploadImage = async (req: Request, res: Response) => {
+  try {
+    const result: any = await uploadToCloudinary(req?.file?.buffer);
+    console.log("result", result);
+    let avatarUrl = result.secure_url;
+
+    res.status(200).json({
+      status: "Success",
+      data: avatarUrl,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "Fail",
+      message: error,
     });
   }
 };

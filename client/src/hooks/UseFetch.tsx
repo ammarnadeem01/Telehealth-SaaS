@@ -21,6 +21,7 @@ const useFetch = <T,>(url: string) => {
       } finally {
         setLoading(false);
       }
+      await data;
     },
     [url]
   );

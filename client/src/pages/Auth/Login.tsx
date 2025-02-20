@@ -14,6 +14,7 @@ const handleLogin = (data: any, _token: string) => {
     avatar: data.profilePicture,
     token: _token,
     name: data.name,
+    email: data.email,
   });
 };
 
