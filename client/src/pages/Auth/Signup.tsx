@@ -2,7 +2,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useFetch from "@hooks/UseFetch";
-import { IUser } from "@types/User";
+import { IUser } from "interfaces/User";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "@store/authStore";
 
 const registerSchema = z
   .object({
@@ -22,7 +24,19 @@ const registerSchema = z
     path: ["confirmPassword"],
   });
 type RegisterFormData = z.infer<typeof registerSchema>;
+
+const handleLogin = (data: any, _token: string) => {
+  console.log(data);
+  useAuthStore.getState().login({
+    userId: data._id,
+    role: data.role,
+    avatar: data.profilePicture,
+    token: _token,
+    name: data.name,
+  });
+};
 const Signup = () => {
+  const nav = useNavigate();
   const { data, loading, error, triggerFetch } = useFetch<IUser>(
     "http://localhost:3000/api/v1/users/register"
   );
@@ -32,6 +46,10 @@ const Signup = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
+    if (data && !error) {
+      handleLogin(data.data, data.token);
+      nav("/profile");
+    }
   };
   const {
     register,

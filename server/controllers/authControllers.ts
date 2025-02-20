@@ -115,7 +115,8 @@ export const loginUser = async (req: Request, res: Response) => {
       });
       return;
     }
-
+    console.log(req.body);
+    console.log(user);
     if (!user) {
       res.status(404).json({
         status: "Fail",
@@ -127,6 +128,7 @@ export const loginUser = async (req: Request, res: Response) => {
     const refreshToken = generateRefreshToken(user._id);
     user.refreshToken = refreshToken;
     await user.save();
+    console.log(2, user);
     res.status(200).json({
       status: "Success",
       token: accessToken,

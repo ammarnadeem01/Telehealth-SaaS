@@ -3,7 +3,8 @@ export enum UserRole {
   Doctor = "doctor",
   Admin = "admin",
 }
-export interface IUser {
+interface User {
+  _id: string;
   name: string;
   email: string;
   role: UserRole;
@@ -13,4 +14,9 @@ export interface IUser {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUser {
+  data: User;
+  token: string;
 }

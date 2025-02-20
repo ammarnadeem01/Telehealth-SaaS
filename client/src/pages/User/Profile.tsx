@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import useUserStore from "@store/userStore";
+import { useAuthStore } from "@store/authStore";
 
 interface ProfileFormData {
   name: string;
@@ -10,7 +10,8 @@ interface ProfileFormData {
 }
 
 const Profile = () => {
-  const { user, setUser, logoutUser } = useUserStore();
+  const avatar = useAuthStore((state) => state.avatar);
+
   const { register, handleSubmit, watch, setValue } =
     useForm<ProfileFormData>();
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -47,7 +48,7 @@ const Profile = () => {
       <div className="flex flex-col items-center">
         <div className="relative">
           <img
-            src={avatarPreview || "/default-avatar.png"}
+            src={avatar}
             alt="Avatar"
             className="w-24 h-24 rounded-full border-4 border-gray-300 shadow-md"
           />
