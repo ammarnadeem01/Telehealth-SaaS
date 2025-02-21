@@ -1,26 +1,23 @@
 import nodemailer from "nodemailer";
-const sendEmail = async (to: string, subject: string, text: string) => {
+export const sendEmail = async (to: string, subject: string, text: string) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: "nadeemammar04@gmail.com",
+        pass: process.env.APP_PASSWORD,
       },
     });
-
     const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to,
-      subject,
-      text,
+      from: "nadeemammar04@gmail.com",
+      to: "ammarpk2004@gmail.com",
+      subject: process.env.SUBJECT_LOGIN,
+      text: "Your email client does not support HTML emails. Please enable HTML to view the full content.",
+      html: process.env.TEXT_LOGIN,
     };
-
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent:", info.response);
   } catch (error) {
     console.error("Error sending email:", error);
   }
 };
-
-module.exports = sendEmail;
