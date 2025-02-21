@@ -74,6 +74,7 @@ const userSchema: Schema<IUser> = new Schema(
     },
     refreshToken: {
       type: String,
+      select: false,
     },
   },
   {

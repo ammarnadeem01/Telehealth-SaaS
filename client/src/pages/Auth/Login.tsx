@@ -1,16 +1,19 @@
-// import axios from "axios";
-// import { useState } from "react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { IUser } from "@types/User";
+import useFetch from "@hooks/UseFetch";
+import { useNavigate } from "react-router-dom";
+import useUserStore from "@store/userStore";
+import useAuthStore from "@store/authStore";
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 type LoginFormData = z.infer<typeof loginSchema>;
+
 const Login = () => {
+  const nav = useNavigate();
   const {
     register,
     handleSubmit,
@@ -18,16 +21,26 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-  const onSubmit = (data: LoginFormData) => {
-    axios
-      .post("http://localhost:3000/api/v1/users/login", data)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const { setUser } = useUserStore();
+  const { setAccessToken } = useAuthStore();
+  const { data, loading, error, triggerFetch } = useFetch<IUser>(
+    "http://localhost:3000/api/v1/users/login"
+  );
+
+  const onSubmit = async (formData: LoginFormData) => {
+    await triggerFetch({
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    if (!loading && data) {
+      console.log(data, error);
+      // setAccessToken(data.token);
+      // setUser
+      nav("/signup");
+    }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg w-96">
@@ -41,7 +54,7 @@ const Login = () => {
             </label>
             <input
               type="email"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
               className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.email && (
@@ -54,7 +67,7 @@ const Login = () => {
             </label>
             <input
               type="password"
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
               className="w-full p-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.password && (
@@ -64,9 +77,11 @@ const Login = () => {
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+            disabled={loading}
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
         <div className="mt-4 text-center">
           <a href="/signup" className="text-sm text-blue-500 hover:underline">

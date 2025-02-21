@@ -38,8 +38,6 @@ export const registerUser = async (req: Request, res: Response) => {
       role,
       phoneNumber,
       address,
-      profilePicture,
-      isActive,
     }: IUser = req.body;
     if (
       !name ||
@@ -48,8 +46,7 @@ export const registerUser = async (req: Request, res: Response) => {
       !confirmPassword ||
       !role ||
       !phoneNumber ||
-      !address ||
-      !profilePicture
+      !address
     ) {
       res.status(400).json({
         status: "Fail",
@@ -73,8 +70,7 @@ export const registerUser = async (req: Request, res: Response) => {
       role,
       phoneNumber,
       address,
-      profilePicture,
-      isActive,
+      profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${name}`,
     });
     if (!user) {
       res.status(404).json({
