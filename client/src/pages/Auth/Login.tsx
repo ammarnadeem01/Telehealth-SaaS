@@ -1,11 +1,23 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IUser } from "@types/User";
+import { IUser } from "interfaces/User";
 import useFetch from "@hooks/UseFetch";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "@store/userStore";
-import useAuthStore from "@store/authStore";
+import { useAuthStore } from "../../store/authStore";
+
+const handleLogin = (data: any, _token: string) => {
+  console.log(data);
+  useAuthStore.getState().login({
+    userId: data._id,
+    role: data.role,
+    avatar: data.profilePicture,
+    token: _token,
+    name: data.name,
+    email: data.email,
+  });
+};
+
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -21,8 +33,6 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-  const { setUser } = useUserStore();
-  const { setAccessToken } = useAuthStore();
   const { data, loading, error, triggerFetch } = useFetch<IUser>(
     "http://localhost:3000/api/v1/users/login"
   );
@@ -34,10 +44,12 @@ const Login = () => {
       body: JSON.stringify(formData),
     });
     if (!loading && data) {
-      console.log(data, error);
-      // setAccessToken(data.token);
-      // setUser
-      nav("/signup");
+      console.log(data);
+      handleLogin(data.data, data.token);
+      nav("/profile");
+    }
+    if (error) {
+      console.log(error);
     }
   };
 

@@ -5,7 +5,7 @@
       "@components/*": ["components/*"],
       "@pages/*": ["pages/*"],
       "@hooks/*": ["hooks/*"],
-      "@types/*": ["types/*"],
+      "@interfaces/*": ["interfaces/*"],
       "@api/*": ["api/*"],
       "@store/*": ["store/*"]
     },
