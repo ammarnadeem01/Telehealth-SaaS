@@ -4,6 +4,7 @@ import { IUser } from "@models/User";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import mongoose from "mongoose";
 import { uploadToCloudinary } from "middlewares/cloudinary.middleware";
+import { sendEmail } from "utils/SendMail";
 interface UserBody {
   email: string;
   password: string;
@@ -117,6 +118,9 @@ export const loginUser = async (req: Request, res: Response) => {
       return;
     }
     console.log(req.body);
+    sendEmail(user.email, "", "");
+
+    console.log(1111111111111111111111111111111);
     console.log(user);
     if (!user) {
       res.status(404).json({
