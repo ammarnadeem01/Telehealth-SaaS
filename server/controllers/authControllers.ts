@@ -5,6 +5,8 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import mongoose from "mongoose";
 import { uploadToCloudinary } from "middlewares/cloudinary.middleware";
 import { sendEmail } from "utils/SendMail";
+import crypto from "crypto";
+
 interface UserBody {
   email: string;
   password: string;
@@ -91,6 +93,14 @@ export const registerUser = async (req: Request, res: Response) => {
       token: accessToken,
       data: user,
     });
+    const message = `<p>Welcome <strong>${user.name}</strong>,</p>\n
+    <p>Thank you for signing up for <strong>Telehealth</strong>!</p>\n
+    <p>Your account was successfully created on <strong>${user.createdAt.toLocaleDateString()}</strong> at <strong>${user.createdAt.toLocaleTimeString()}</strong>.</p>\n
+    <p>We're excited to have you on board.</p>\n
+    <p>If you didn't sign up for this account, please contact our support team immediately.</p>\n
+    <p>Best regards,<br><strong>Telehealth Team</strong></p>`;
+
+    sendEmail(user.email, `Welcome to Telehealth, ${user.name}`, message);
   } catch (error) {
     res.status(500).json({
       status: "Fail",
@@ -110,22 +120,12 @@ export const loginUser = async (req: Request, res: Response) => {
       return;
     }
     const user = await User.findOne({ email }).select("+password");
-    if (!user || !user.comparePasswords(password, user.password)) {
+    console.log("loginUser", user);
+    const isMatch = await user?.comparePasswords(password, user.password);
+    if (!user || !isMatch) {
       res.status(400).json({
         status: "Fail",
         message: "Incorrect Email or Password...",
-      });
-      return;
-    }
-    console.log(req.body);
-    sendEmail(user.email, "", "");
-
-    console.log(1111111111111111111111111111111);
-    console.log(user);
-    if (!user) {
-      res.status(404).json({
-        status: "Fail",
-        message: "Incorrect Email or Password.",
       });
       return;
     }
@@ -133,7 +133,6 @@ export const loginUser = async (req: Request, res: Response) => {
     const refreshToken = generateRefreshToken(user._id);
     user.refreshToken = refreshToken;
     await user.save();
-    console.log(2, user);
     res.status(200).json({
       status: "Success",
       token: accessToken,
@@ -182,6 +181,89 @@ export const uploadImage = async (req: Request, res: Response) => {
     res.status(200).json({
       status: "Success",
       data: avatarUrl,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "Fail",
+      message: error,
+    });
+  }
+};
+
+const generateResetToken = () => {
+  return crypto.randomBytes(100).toString("hex");
+};
+const hashToken = (token: string) => {
+  return crypto.createHash("sha256").update(token).digest("hex");
+};
+
+export const forogtPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400).json({
+        status: "Fail",
+        message: "Email is required field.",
+      });
+      return;
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      res.status(400).json({
+        status: "Fail",
+        message: "No User Found...",
+      });
+      return;
+    }
+    const token = generateResetToken();
+    const hashedToken = hashToken(token);
+    user.resetToken = hashedToken;
+    await user.save();
+    const resetURL = `http://localhost:5173/reset-password/${token}`;
+    const message = `<p>Hello <strong>${user.name}</strong>,</p>\n<p>We noticed a forogt password request from your account for Telehealth app. Please click on the link below to reset your password.</p>\n${resetURL}\n<p>Stay secure,<br><strong>Telehealth Team</strong></p>`;
+    await sendEmail(user.email, "Reset Password Request", message);
+    res.status(200).json({
+      status: "Success",
+      message: "Email Sent",
+      resetToken: token,
+      dbtoken: hashedToken,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "Fail",
+      message: error,
+    });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+    if (!password || !confirmPassword) {
+      res.status(400).json({
+        status: "Fail",
+        message: "Password and confirm Password are required fields.",
+      });
+      return;
+    }
+    const encryptedToken = hashToken(token);
+    const user = await User.findOne({
+      resetToken: encryptedToken,
+    });
+    if (!user) {
+      res.status(404).json({
+        status: "Fail",
+        message: "No User Found. Token is valid.",
+      });
+      return;
+    }
+    user.password = password;
+    user.confirmPassword = confirmPassword;
+    await user.save();
+    res.status(200).json({
+      status: "Success",
+      message: user,
     });
   } catch (error) {
     res.status(500).json({

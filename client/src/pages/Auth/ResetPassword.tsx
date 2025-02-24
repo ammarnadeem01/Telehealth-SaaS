@@ -25,7 +25,7 @@ const ResetPassword = () => {
   let token = searchParams.token;
   const [message, setMessage] = useState<string | null>(null);
   const { data, loading, error, triggerFetch } = useFetch<any>(
-    "http://localhost:3000/api/v1/users/reset-password"
+    `http://localhost:3000/api/v1/users/reset-password/${token}`
   );
   const handleResetPassword = (data: any, _token: string) => {
     console.log(data);
@@ -39,7 +39,7 @@ const ResetPassword = () => {
     });
   };
 
-  const onSubmit = async (formData: ResetFormData) => {
+  const onSubmit = async (formData: any) => {
     await triggerFetch({
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ const ResetPassword = () => {
 
   return (
     <div className="flex justify-center items-center h-screen mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <div className="w-1/3 mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <div className="w-4/5 md:w-1/2 lg:w-1/3 mx-auto p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-xl font-bold mb-4">Reset Password</h2>
         {message && <p className="text-sm text-gray-700 mb-3">{message}</p>}
         <form onSubmit={handleSubmit(onSubmit)}>

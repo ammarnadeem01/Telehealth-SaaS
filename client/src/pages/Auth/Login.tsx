@@ -3,7 +3,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IUser } from "interfaces/User";
 import useFetch from "@hooks/UseFetch";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 
 const handleLogin = (data: any, _token: string) => {
@@ -86,6 +86,9 @@ const Login = () => {
               <p className="text-red-500 text-sm">{errors.password.message}</p>
             )}
           </div>
+          <p className="text-red-600 text-center py-2">
+            <NavLink to="/forgot-password">Forgot Password?</NavLink>
+          </p>
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"

@@ -19,6 +19,7 @@ export interface IUser {
   refreshToken: string | null;
   createdAt: Date;
   updatedAt: Date;
+  resetToken: string;
   comparePasswords: (passwd: string, comparePasswd: string) => {};
 }
 const userSchema: Schema<IUser> = new Schema(
@@ -76,6 +77,9 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
       select: false,
     },
+    resetToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -86,9 +90,11 @@ userSchema.pre("find", function (next) {
   next();
 });
 userSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  this.confirmPassword = undefined;
-  next();
+  if (this.confirmPassword) {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.confirmPassword = undefined;
+    next();
+  }
 });
 userSchema.methods.comparePasswords = async function (
   passwd: string,

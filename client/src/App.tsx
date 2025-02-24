@@ -1,3 +1,4 @@
+import EmailSent from "@pages/Auth/EmailSent";
 import ForgotPassword from "@pages/Auth/ForgotPasswrord";
 import Login from "@pages/Auth/Login";
 import ResetPassword from "@pages/Auth/ResetPassword";
@@ -14,6 +15,7 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/email-sent" element={<EmailSent />} />
       {/* <Route path="/profile" element={<Profile />} /> */}
 
       <Route element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}>
