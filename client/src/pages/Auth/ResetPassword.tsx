@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import useFetch from "@hooks/UseFetch";
-import { useAuthStore } from "@store/authStore";
+import useFetch from "@/hooks/UseFetch";
+import { useAuthStore } from "@/store/authStore";
 
 interface ResetPasswordForm {
   password: string;

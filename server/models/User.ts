@@ -85,10 +85,7 @@ const userSchema: Schema<IUser> = new Schema(
     timestamps: true,
   }
 );
-userSchema.pre("find", function (next) {
-  this.find({ active: true });
-  next();
-});
+
 userSchema.pre("save", async function (next) {
   if (this.confirmPassword) {
     this.password = await bcrypt.hash(this.password, 12);

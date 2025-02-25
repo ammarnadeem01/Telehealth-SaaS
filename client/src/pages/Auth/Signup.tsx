@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useFetch from "@hooks/UseFetch";
-import { IUser } from "interfaces/User";
+import useFetch from "@/hooks/UseFetch";
+import { IUser } from "@/interfaces/User";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@store/authStore";
+import { useAuthStore } from "@/store/authStore";
 
 const registerSchema = z
   .object({
