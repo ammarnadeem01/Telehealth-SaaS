@@ -11,21 +11,21 @@ import AppointmentRouter from "@routes/appointment";
 
 app.use(helmet());
 app.use(sanitize());
-let limtier = rateLimit({
-  max: 1, // 1 req per ip {fot testin purposes}
-  windowMs: 6000,
-  message:
-    "We have received too many requests from this ip. Please try again later.",
-});
-app.use("/api", limtier);
+// let limtier = rateLimit({
+//   max: 1, // 1 req per ip {fot testin purposes}
+//   windowMs: 6000,
+//   message:
+//     "We have received too many requests from this ip. Please try again later.",
+// });
+// app.use("/api", limtier);
 // app.use(xss());
-const corsOptions = {
-  origin: ["https://localhost:5173.com"],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: ["*"],
+//   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+//   credentials: true,
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/v1/users", UserRouter);
