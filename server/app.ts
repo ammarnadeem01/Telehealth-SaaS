@@ -8,9 +8,10 @@ import sanitize from "express-mongo-sanitize"; // sanitize for hacker attacks- n
 import helmet from "helmet"; //  security headers
 import UserRouter from "@routes/user";
 import AppointmentRouter from "@routes/appointment";
+import DoctorAvaiabilityRouter from "@routes/doctor_availability";
 
-app.use(helmet());
-app.use(sanitize());
+// app.use(helmet());
+// app.use(sanitize());
 // let limtier = rateLimit({
 //   max: 1, // 1 req per ip {fot testin purposes}
 //   windowMs: 6000,
@@ -30,4 +31,5 @@ app.use(express.json());
 
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/appointment", AppointmentRouter);
+app.use("/api/v1/doctorAvailability", DoctorAvaiabilityRouter);
 export default app;
