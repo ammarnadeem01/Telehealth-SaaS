@@ -37,6 +37,7 @@ const handleLogin = (data: any, _token: string) => {
   });
 };
 const Signup = () => {
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const nav = useNavigate();
   const { data, loading, error, triggerFetch } = useFetch<IUser>(
     "http://localhost:3000/api/v1/users/register"
@@ -45,7 +46,7 @@ const Signup = () => {
     await triggerFetch({
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({ ...formData, timezone: userTimezone }),
     });
     if (data && !error) {
       handleLogin(data.data, data.token);

@@ -20,6 +20,7 @@ export interface IUser {
   createdAt: Date;
   updatedAt: Date;
   resetToken: string;
+  timezone: String;
   comparePasswords: (passwd: string, comparePasswd: string) => {};
 }
 const userSchema: Schema<IUser> = new Schema(
@@ -79,6 +80,10 @@ const userSchema: Schema<IUser> = new Schema(
     },
     resetToken: {
       type: String,
+    },
+    timezone: {
+      type: String,
+      default: "UTC",
     },
   },
   {

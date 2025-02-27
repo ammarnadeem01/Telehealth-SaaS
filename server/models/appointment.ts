@@ -27,6 +27,7 @@ export interface IAppointment {
   paymentStatus: PaymentStatus;
   createdAt: Date;
   updatedAt: Date;
+  dateTime: string;
 }
 
 const appointmentSchema: Schema<IAppointment> = new Schema(
@@ -67,6 +68,7 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       enum: Object.values(PaymentStatus),
       default: PaymentStatus.PENDING,
     },
+    dateTime: { type: String, required: true },
   },
   {
     timestamps: true,

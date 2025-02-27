@@ -42,6 +42,7 @@ export const registerUser = async (req: Request, res: Response) => {
       role,
       phoneNumber,
       address,
+      timezone,
     }: IUser = req.body;
     if (
       !name ||
@@ -50,7 +51,8 @@ export const registerUser = async (req: Request, res: Response) => {
       !confirmPassword ||
       !role ||
       !phoneNumber ||
-      !address
+      !address ||
+      !timezone
     ) {
       res.status(400).json({
         status: "Fail",
@@ -74,6 +76,7 @@ export const registerUser = async (req: Request, res: Response) => {
       role,
       phoneNumber,
       address,
+      timezone,
       profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${name}`,
     });
     if (!user) {
