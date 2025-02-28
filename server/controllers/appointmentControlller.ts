@@ -1,37 +1,55 @@
 import { Request, Response } from "express";
 import Appointment from "@models/appointment";
 import moment from "moment-timezone";
+// import { addAppointmentToGoogleCalendar } from "../utils/googleCalendar";
+import { createCalendarEvent } from "../utils/googleCalendar";
 
 export const createAppointment = async (req: Request, res: Response) => {
   try {
     const {
       name,
       participants,
-      date,
-      time,
       timezone,
       status,
       type,
       notes,
       paymentStatus,
+      startTime,
+      endTime,
     } = req.body;
 
-    const localDateTime = moment.tz(`${date} ${time}`, timezone);
-    const utcDateTime = localDateTime.utc().toDate();
-    const newAppointment = await Appointment.create({
-      name,
-      participants,
-      date,
-      status,
-      type,
+    const localStartDateTime = moment.tz(`${startTime}`, timezone);
+    const localEndDateTime = moment.tz(`${endTime}`, timezone);
+    const utcStartDateTime = localStartDateTime.utc().toDate();
+    const utcEndDateTime = localEndDateTime.utc().toDate();
+    let newAppointment;
+    try {
+      newAppointment = await Appointment.create({
+        name,
+        participants,
+        status,
+        type,
+        notes,
+        paymentStatus,
+        startTime: utcStartDateTime,
+        endTime: utcEndDateTime,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    const event = {
       notes,
-      paymentStatus,
-      dateTime: utcDateTime,
-    });
-
+      participants,
+      timezone,
+      startTime,
+      endTime,
+    };
+    const googleEvent = await createCalendarEvent(event);
+    console.log(22222);
     res.status(201).json({
       status: "Success",
       data: newAppointment,
+      // googleEvent,
     });
   } catch (error) {
     res.status(500).json({
@@ -66,15 +84,23 @@ export const getAppointmentById = async (req: Request, res: Response) => {
         .json({ success: false, message: "Appointment not found" });
       return;
     }
-    const storedUTC = appointment.dateTime;
-    const localTimeConverted = moment
-      .utc(storedUTC)
+    const storedStartUTC = appointment.startTime;
+    const storedEndUTC = appointment.endTime;
+    const localStartTimeConverted = moment
+      .utc(storedStartUTC)
+      .tz(userTimezone)
+      .format("YYYY-MM-DD HH:mm A");
+    const localEndTimeConverted = moment
+      .utc(storedEndUTC)
       .tz(userTimezone)
       .format("YYYY-MM-DD HH:mm A");
 
-    res
-      .status(200)
-      .json({ success: true, data: appointment, localTimeConverted });
+    res.status(200).json({
+      success: true,
+      data: appointment,
+      localStartTimeConverted,
+      localEndTimeConverted,
+    });
   } catch (error) {
     res
       .status(500)

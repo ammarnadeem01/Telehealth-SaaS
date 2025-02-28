@@ -27,7 +27,8 @@ export interface IAppointment {
   paymentStatus: PaymentStatus;
   createdAt: Date;
   updatedAt: Date;
-  dateTime: string;
+  startTime: string;
+  endTime: string;
 }
 
 const appointmentSchema: Schema<IAppointment> = new Schema(
@@ -37,6 +38,14 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       required: true,
       maxlength: 100,
     },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
     participants: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -44,11 +53,6 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
         required: true,
       },
     ],
-    date: {
-      type: Date,
-      required: true,
-      default: Date.now,
-    },
     status: {
       type: String,
       enum: Object.values(AppointmentStatus),
@@ -68,7 +72,6 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       enum: Object.values(PaymentStatus),
       default: PaymentStatus.PENDING,
     },
-    dateTime: { type: String, required: true },
   },
   {
     timestamps: true,

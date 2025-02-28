@@ -83,6 +83,7 @@ const userSchema: Schema<IUser> = new Schema(
     },
     timezone: {
       type: String,
+
       default: "UTC",
     },
   },
