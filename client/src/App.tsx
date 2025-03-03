@@ -13,22 +13,54 @@ import Patients from "./pages/Admin/Dashboard/Patients";
 import Doctors from "./pages/Admin/Dashboard/Doctors";
 import Appointments from "./pages/Admin/Dashboard/Appointments";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+import DashboardLayout from "./components/dashboard/DashboardLayout";
+import MedicalHistory from "./pages/User/Dashboard/MedicalHistory";
+import SymptomCheck from "./pages/User/Dashboard/SymptompCheck";
+import AppointmentsUser from "./pages/User/Dashboard/Appointments";
+import VideoConsult from "./pages/User/Dashboard/VideoConsult";
+import Messages from "./pages/User/Dashboard/Messages";
+import UserDashboard from "./pages/User/Dashboard/UserDashboard";
+import AdminLayout from "./components/admin/AdminLayout";
+import UserManagement from "./pages/Admin/Dashboard/UserManagement";
+import AppointmentManagement from "./pages/Admin/Dashboard/AppointmentManagement";
+import { RolesPermissions } from "./pages/Admin/Dashboard/RolePermissions";
+import { AuditLogs } from "./pages/Admin/Dashboard/AuditLogs";
+import { SystemSettings } from "./pages/Admin/Dashboard/SystemSettings";
+import { MedicalResources } from "./pages/Admin/Dashboard/MedicalResources";
 
 function App() {
   return (
     <Routes>
+      {/* AUTH */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/email-sent" element={<EmailSent />} />
-      <Route path="/admin" element={<AdminDashboard />}>
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="doctors" element={<Doctors />} />
-        <Route path="appointments" element={<Appointments />} />
-        <Route path="patients" element={<Patients />} />
-        <Route path="analytics" element={<Analytics />} />
+      {/* DOCTOR DASHBOARD */}
+      {/* ADMIN DASHBOARD */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="users" element={<UserManagement />} />
+        <Route path="appointments" element={<AppointmentManagement />} />
+        <Route path="roles" element={<RolesPermissions />} />
+        <Route path="audit" element={<AuditLogs />} />
+        <Route path="settings" element={<SystemSettings />} />
+        <Route path="resources" element={<MedicalResources />} />
       </Route>
+
+      {/* USER DASHBOARD */}
+      <Route path="/user" element={<DashboardLayout />}>
+        <Route path="dashboard" element={<UserDashboard />} />
+        <Route path="doctors" element={<Doctors />} />
+        <Route path="medical-history" element={<MedicalHistory />} />
+        <Route path="symptom-check" element={<SymptomCheck />} />
+        <Route path="appointments" element={<AppointmentsUser />} />
+        <Route path="messages" element={<Messages />} />
+        <Route path="video-consult" element={<VideoConsult />} />
+      </Route>
+
+      {/* PROTECTED ROUTES */}
       <Route
         element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
       ></Route>
