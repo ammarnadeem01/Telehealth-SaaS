@@ -1,0 +1,14 @@
+[
+  {
+    "treatment": "Metformin",
+    "used_for": ["Diabetes Type 2"],
+    "dosage": "500mg twice daily",
+    "side_effects": ["Nausea", "Diarrhea", "Weight loss"]
+  },
+  {
+    "treatment": "ACE inhibitors",
+    "used_for": ["Hypertension"],
+    "dosage": "10mg once daily",
+    "side_effects": ["Cough", "Dizziness", "Increased potassium levels"]
+  }
+]

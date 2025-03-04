@@ -1,0 +1,20 @@
+[
+  {
+    "disease": "Diabetes Type 2",
+    "description": "A chronic condition that affects the way the body processes blood sugar.",
+    "causes": ["Genetics", "Obesity", "Sedentary lifestyle"],
+    "symptoms": [
+      "Increased thirst",
+      "Frequent urination",
+      "Unexplained weight loss"
+    ],
+    "treatments": ["Metformin", "Insulin therapy", "Lifestyle changes"]
+  },
+  {
+    "disease": "Hypertension",
+    "description": "A condition in which the blood pressure in the arteries is persistently elevated.",
+    "causes": ["High sodium intake", "Lack of exercise", "Genetics"],
+    "symptoms": ["Headache", "Dizziness", "Shortness of breath"],
+    "treatments": ["ACE inhibitors", "Diuretics", "Lifestyle modifications"]
+  }
+]

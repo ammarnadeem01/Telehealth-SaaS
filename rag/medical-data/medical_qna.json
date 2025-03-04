@@ -1,0 +1,12 @@
+[
+  {
+    "question": "What are the symptoms of pneumonia?",
+    "answer": "Common symptoms include fever, cough with phlegm, chest pain, and difficulty breathing.",
+    "source": "CDC"
+  },
+  {
+    "question": "How is diabetes managed?",
+    "answer": "Diabetes is managed through diet, exercise, medication such as insulin or metformin, and regular blood sugar monitoring.",
+    "source": "WHO"
+  }
+]

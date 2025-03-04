@@ -1,0 +1,12 @@
+[
+  {
+    "symptom": "Fever",
+    "possible_diseases": ["Flu", "COVID-19", "Malaria"],
+    "related_conditions": ["Dehydration", "Fatigue"]
+  },
+  {
+    "symptom": "Cough",
+    "possible_diseases": ["Bronchitis", "Pneumonia", "Asthma"],
+    "related_conditions": ["Allergies", "Throat irritation"]
+  }
+]

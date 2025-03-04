@@ -27,6 +27,13 @@ import { RolesPermissions } from "./pages/Admin/Dashboard/RolePermissions";
 import { AuditLogs } from "./pages/Admin/Dashboard/AuditLogs";
 import { SystemSettings } from "./pages/Admin/Dashboard/SystemSettings";
 import { MedicalResources } from "./pages/Admin/Dashboard/MedicalResources";
+import { DoctorLayout } from "./components/doctor/DoctorLayout";
+import { DoctorDashboard } from "./pages/Doctor/DoctorDashboard";
+import { DoctorAppointments } from "./pages/Doctor/DoctorAppointments";
+import { PatientManagement } from "./pages/Doctor/PatientManagement";
+import { MedicalRecords } from "./pages/Doctor/MedicalRecords";
+import { Prescriptions } from "./pages/Doctor/Prescriptions";
+import { VideoConsults } from "./pages/Doctor/VideoConsults";
 
 function App() {
   return (
@@ -38,9 +45,18 @@ function App() {
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/email-sent" element={<EmailSent />} />
       {/* DOCTOR DASHBOARD */}
+      <Route path="/doctor" element={<DoctorLayout />}>
+        <Route index element={<DoctorDashboard />} />
+        <Route path="appointments" element={<DoctorAppointments />} />
+        <Route path="patients" element={<PatientManagement />} />
+        <Route path="records" element={<MedicalRecords />} />
+        <Route path="prescriptions" element={<Prescriptions />} />
+        <Route path="consults" element={<VideoConsults />} />
+        {/* Add other doctor routes */}
+      </Route>
       {/* ADMIN DASHBOARD */}
       <Route path="/admin" element={<AdminLayout />}>
-        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route index element={<AdminDashboard />} />
         <Route path="users" element={<UserManagement />} />
         <Route path="appointments" element={<AppointmentManagement />} />
         <Route path="roles" element={<RolesPermissions />} />
@@ -51,7 +67,7 @@ function App() {
 
       {/* USER DASHBOARD */}
       <Route path="/user" element={<DashboardLayout />}>
-        <Route path="dashboard" element={<UserDashboard />} />
+        <Route index element={<UserDashboard />} />
         <Route path="doctors" element={<Doctors />} />
         <Route path="medical-history" element={<MedicalHistory />} />
         <Route path="symptom-check" element={<SymptomCheck />} />

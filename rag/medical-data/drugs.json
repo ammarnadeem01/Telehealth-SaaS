@@ -1,0 +1,14 @@
+[
+  {
+    "drug_name": "Aspirin",
+    "uses": ["Pain relief", "Blood thinner"],
+    "side_effects": ["Stomach ulcers", "Bleeding"],
+    "contraindications": ["Peptic ulcer", "Hemophilia"]
+  },
+  {
+    "drug_name": "Paracetamol",
+    "uses": ["Fever", "Pain relief"],
+    "side_effects": ["Liver damage (in high doses)"],
+    "contraindications": ["Liver disease", "Alcoholism"]
+  }
+]

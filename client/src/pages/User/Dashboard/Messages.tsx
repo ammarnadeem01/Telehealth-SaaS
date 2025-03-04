@@ -23,7 +23,7 @@ const conversations = [
   },
 ];
 
-export default function MessagesPage() {
+export default function Messages() {
   const [selectedConversation, setSelectedConversation] = useState<
     number | null
   >(1);

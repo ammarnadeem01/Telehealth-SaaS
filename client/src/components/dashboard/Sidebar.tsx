@@ -21,7 +21,7 @@ export function Sidebar() {
         {
           icon: LayoutDashboard,
           label: "Dashboard",
-          href: "/user/dashboard",
+          href: "/user",
         },
         {
           icon: Calendar,
@@ -61,7 +61,10 @@ export function Sidebar() {
     <div className="hidden border-r bg-muted/40 md:block h-screen w-64 fixed left-0 top-0">
       <div className="flex h-full flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
+          <Link
+            to="/user/dashboard"
+            className="flex items-center gap-2 font-semibold"
+          >
             <span className="text-xl">TeleCure</span>
           </Link>
         </div>

@@ -172,21 +172,21 @@ export default function UserDashboard() {
               asChild
               className="w-full bg-blue-600 hover:bg-blue-700 text-white"
             >
-              <Link to="/dashboard/appointments/new">Book New Appointment</Link>
+              <Link to="/user/appointments/new">Book New Appointment</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
             >
-              <Link to="/dashboard/video-consult">Start Video Consult</Link>
+              <Link to="/user/video-consult">Start Video Consult</Link>
             </Button>
             <Button
               asChild
               variant="outline"
               className="w-full border-blue-200 text-blue-600 hover:bg-blue-50"
             >
-              <Link to="/dashboard/symptom-check">AI Symptom Check</Link>
+              <Link to="/user/symptom-check">AI Symptom Check</Link>
             </Button>
           </CardContent>
         </Card>
