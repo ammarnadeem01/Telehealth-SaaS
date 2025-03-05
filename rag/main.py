@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from server.rag.pipeline import get_rag_pipeline
+from pipeline import get_rag_pipeline
 # from server.medical_data.schema import Patient
 # from server.medical_data.data_loader import patients``
 import uvicorn
@@ -19,16 +19,37 @@ def home():
 @app.post("/analyze-symptoms")
 async def analyze_symptoms(query: SymptomQuery):
     try:
-        prompt = f"""
-        Medical Context: {query.medical_history}
-        Patient Query: {query.user_input}
-        Provide a preliminary analysis considering the above:
-        """
+        prompt_template = (
+            "You are a helpful medical expert. Answer the following question based on the context provided.\n"
+            "Do not copy the source text verbatim; instead, synthesize a detailed and descriptive answer.\n"
+            "If the question does not pertain to medical information or no relevant context is found, simply respond with \"Out of scope\".\n\n"
+            "Question: {question}\n\n"
+            "Context: {context}\n\n"
+            "Answer:"
+        )
+        prompt = prompt_template.format(
+            question=query.user_input,
+            context=query.medical_history
+        )
+        print("++++++++++++++++++++++++++++++++++++")
+        print("qa_chain",qa_chain)
+        print("++++++++++++++++++++++++++++++++++++")
         result = qa_chain({"query": prompt})
-
+        print("result",result)
+        print("++++++++++++++++++++++++++++++++++++")
+        answer = result.get("result", "").strip()
+        sources = [doc.metadata.get("source", "unknown") for doc in result.get("source_documents", [])]
+        
+        if not answer or answer.lower() == "out of scope":
+            return {
+                "response": "Out of scope",
+                "sources": [],
+                "confidence": 0.0
+            }
+        
         return {
-            "response": result["result"],
-            "sources": [doc.metadata["source"] for doc in result["source_documents"]],
+            "response": answer,
+            "sources": sources,
             "confidence": 0.85  
         }
     except Exception as e:
