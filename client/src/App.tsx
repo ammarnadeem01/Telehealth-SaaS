@@ -80,7 +80,7 @@ function App() {
       <Route
         element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
       ></Route>
-      <Route element={<RoleProtectedRoute allowedRoles={["doctor"]} />}>
+      <Route element={<RoleProtectedRoute allowedRoles={["patient", ""]} />}>
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/unauthorized" element={<Unauthorized />} />

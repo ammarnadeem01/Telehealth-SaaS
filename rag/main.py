@@ -1,16 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from pipeline import get_rag_pipeline
-# from server.medical_data.schema import Patient
-# from server.medical_data.data_loader import patients``
+import pprint
 import uvicorn
 
 app = FastAPI()
-qa_chain = get_rag_pipeline()
+
 
 class SymptomQuery(BaseModel):
     user_input: str
     medical_history: str = ""
+    use_case: str
 
 @app.get("/")
 def home():
@@ -19,39 +19,45 @@ def home():
 @app.post("/analyze-symptoms")
 async def analyze_symptoms(query: SymptomQuery):
     try:
-        prompt_template = (
-            "You are a helpful medical expert. Answer the following question based on the context provided.\n"
-            "Do not copy the source text verbatim; instead, synthesize a detailed and descriptive answer.\n"
-            "If the question does not pertain to medical information or no relevant context is found, simply respond with \"Out of scope\".\n\n"
-            "Question: {question}\n\n"
-            "Context: {context}\n\n"
-            "Answer:"
-        )
-        prompt = prompt_template.format(
-            question=query.user_input,
-            context=query.medical_history
-        )
-        print("++++++++++++++++++++++++++++++++++++")
-        print("qa_chain",qa_chain)
-        print("++++++++++++++++++++++++++++++++++++")
-        result = qa_chain({"query": prompt})
-        print("result",result)
-        print("++++++++++++++++++++++++++++++++++++")
-        answer = result.get("result", "").strip()
-        sources = [doc.metadata.get("source", "unknown") for doc in result.get("source_documents", [])]
-        
-        if not answer or answer.lower() == "out of scope":
-            return {
-                "response": "Out of scope",
-                "sources": [],
-                "confidence": 0.0
-            }
-        
+        if query.use_case == "symptom_retriever":
+            prompt_template = """
+            Retrieve relevant medical context based on symptoms:
+            Patient Input: {question}
+            Medical History: {medical_history}
+            Context: {context}
+            Return a list of relevant medical documents.
+            """
+        elif query.use_case == "diagnosis":
+            prompt_template = """
+            Analyze symptoms with medical history:
+            Patient Input: {question}
+            Medical History: {medical_history}
+            Context: {context}
+            Provide a preliminary diagnosis with detailed analysis.
+            """
+        elif query.use_case == "personalized_insights":
+            prompt_template = """
+            Provide personalized health insights:
+            Patient Input: {question}
+            Medical History: {medical_history}
+            Context: {context}
+            Generate tailored advice, lifestyle recommendations, and potential next steps for well-being.
+            """
+        else:
+            raise HTTPException(status_code=400, detail="Invalid use_case provided.")
+
+        qa_chain = get_rag_pipeline(prompt_template=prompt_template)    
+        result = qa_chain.invoke({
+            "question": query.user_input, 
+            "medical_history": query.medical_history
+        })
+        pprint.pprint(result.content)
         return {
-            "response": answer,
-            "sources": sources,
-            "confidence": 0.85  
+            "response":result.content
+            # "analysis": result["result"],
+            # "sources": list({doc.metadata["source"] for doc in result["source_documents"]})
         }
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -1,13 +1,12 @@
 import os
-from langchain_community.llms import HuggingFaceHub
 from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 
-# Load .env file
 load_dotenv()
+
 def get_llm():
-    return HuggingFaceHub(
-        repo_id="google/flan-t5-base",
-        model_kwargs={"temperature": 0.5, "max_length": 256},
-        huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+    return ChatGoogleGenerativeAI(
+        model="gemini-1.5-flash",
+        temperature=0.3,
+        google_api_key=os.getenv("GEMINI_API_KEY")
     )
-    

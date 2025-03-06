@@ -1,12 +1,117 @@
 [
   {
     "symptom": "Fever",
-    "possible_diseases": ["Flu", "COVID-19", "Malaria"],
-    "related_conditions": ["Dehydration", "Fatigue"]
+    "possible_diseases": ["Influenza", "COVID-19", "Malaria", "Flu"],
+    "related_conditions": ["Infection", "Dehydration", "Fatigue"]
   },
   {
     "symptom": "Cough",
-    "possible_diseases": ["Bronchitis", "Pneumonia", "Asthma"],
-    "related_conditions": ["Allergies", "Throat irritation"]
+    "possible_diseases": [
+      "COVID-19",
+      "Tuberculosis",
+      "Common Cold",
+      "Bronchitis",
+      "Pneumonia",
+      "Asthma"
+    ],
+    "related_conditions": [
+      "Respiratory infection",
+      "Allergies",
+      "Throat irritation"
+    ]
+  },
+  {
+    "symptom": "Headache",
+    "possible_diseases": ["Migraine", "Hypertension", "Flu"],
+    "related_conditions": ["Stress"]
+  },
+  {
+    "symptom": "Fatigue",
+    "possible_diseases": ["Diabetes", "Cancer", "Hypothyroidism"],
+    "related_conditions": ["Anemia"]
+  },
+  {
+    "symptom": "Shortness of breath",
+    "possible_diseases": ["Asthma", "Heart Failure", "Pneumonia"],
+    "related_conditions": ["Respiratory distress"]
+  },
+  {
+    "symptom": "Nausea",
+    "possible_diseases": ["Food Poisoning", "Pregnancy", "Gastritis"],
+    "related_conditions": ["Indigestion"]
+  },
+  {
+    "symptom": "Dizziness",
+    "possible_diseases": ["Hypertension", "Anemia", "Vertigo"],
+    "related_conditions": ["Balance disorders"]
+  },
+  {
+    "symptom": "Joint pain",
+    "possible_diseases": ["Arthritis", "Lupus"],
+    "related_conditions": ["Inflammation"]
+  },
+  {
+    "symptom": "Weight loss",
+    "possible_diseases": ["Cancer", "Hyperthyroidism"],
+    "related_conditions": ["Metabolic disorders"]
+  },
+  {
+    "symptom": "Chest pain",
+    "possible_diseases": ["Heart Attack", "Angina"],
+    "related_conditions": ["Cardiac conditions"]
+  },
+  {
+    "symptom": "Sore Throat",
+    "possible_diseases": ["Common Cold", "Strep Throat"],
+    "related_conditions": ["Upper respiratory infection"]
+  },
+  {
+    "symptom": "Runny Nose",
+    "possible_diseases": ["Allergic Rhinitis", "Common Cold"],
+    "related_conditions": ["Sinus congestion"]
+  },
+  {
+    "symptom": "Itchy Eyes",
+    "possible_diseases": ["Allergic Conjunctivitis", "Allergic Rhinitis"],
+    "related_conditions": ["Allergies"]
+  },
+  {
+    "symptom": "Swelling",
+    "possible_diseases": ["Injury", "Allergic reaction"],
+    "related_conditions": ["Inflammation"]
+  },
+  {
+    "symptom": "Abdominal Pain",
+    "possible_diseases": [
+      "Gastritis",
+      "Appendicitis",
+      "Irritable Bowel Syndrome"
+    ],
+    "related_conditions": ["Digestive issues"]
+  },
+  {
+    "symptom": "Dyspnea",
+    "possible_diseases": ["Asthma", "Heart Failure", "Pneumonia"],
+    "related_conditions": ["Anemia", "Pulmonary embolism", "COPD"]
+  },
+  {
+    "symptom": "Hematuria",
+    "possible_diseases": ["UTI", "Kidney Stones", "Bladder Cancer"],
+    "related_conditions": ["Glomerulonephritis", "Trauma", "Sickle Cell Anemia"]
+  },
+  {
+    "symptom": "Tinnitus",
+    "possible_diseases": ["Meniere's Disease", "Noise Trauma", "Otosclerosis"],
+    "related_conditions": ["Hypertension", "TMJ Disorder", "Acoustic Neuroma"]
+  },
+  {
+    "symptom": "Dysphagia",
+    "possible_diseases": ["Esophageal Cancer", "Achalasia", "Stroke"],
+    "related_conditions": ["GERD", "Myasthenia Gravis", "Scleroderma"]
+  },
+  {
+    "symptom": "Vertigo",
+    "possible_diseases": ["BPPV", "Vestibular Neuritis", "Meniere's"],
+    "related_conditions": ["Migraine", "Acoustic Neuroma", "MS"]
   }
 ]

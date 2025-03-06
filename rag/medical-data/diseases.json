@@ -1,20 +1,172 @@
 [
   {
-    "disease": "Diabetes Type 2",
-    "description": "A chronic condition that affects the way the body processes blood sugar.",
-    "causes": ["Genetics", "Obesity", "Sedentary lifestyle"],
-    "symptoms": [
-      "Increased thirst",
-      "Frequent urination",
-      "Unexplained weight loss"
-    ],
-    "treatments": ["Metformin", "Insulin therapy", "Lifestyle changes"]
+    "disease": "Influenza",
+    "description": "A viral respiratory infection",
+    "causes": ["Influenza virus"],
+    "symptoms": ["Fever", "Cough", "Body aches"],
+    "treatments": ["Antiviral medication", "Rest", "Fluids"]
+  },
+  {
+    "disease": "Diabetes",
+    "description": "A chronic condition affecting blood sugar levels",
+    "causes": ["Genetics", "Lifestyle factors"],
+    "symptoms": ["Increased thirst", "Frequent urination"],
+    "treatments": ["Insulin therapy", "Diet modification", "Exercise"]
   },
   {
     "disease": "Hypertension",
-    "description": "A condition in which the blood pressure in the arteries is persistently elevated.",
-    "causes": ["High sodium intake", "Lack of exercise", "Genetics"],
-    "symptoms": ["Headache", "Dizziness", "Shortness of breath"],
-    "treatments": ["ACE inhibitors", "Diuretics", "Lifestyle modifications"]
+    "description": "High blood pressure",
+    "causes": ["Obesity", "Stress", "Genetics"],
+    "symptoms": ["Headaches", "Dizziness"],
+    "treatments": ["Antihypertensive drugs", "Diet changes", "Exercise"]
+  },
+  {
+    "disease": "Asthma",
+    "description": "A chronic inflammatory lung disease",
+    "causes": ["Allergens", "Environmental factors"],
+    "symptoms": ["Wheezing", "Shortness of breath"],
+    "treatments": ["Inhalers", "Steroids"]
+  },
+  {
+    "disease": "Arthritis",
+    "description": "Joint inflammation causing pain and stiffness",
+    "causes": ["Age", "Genetics", "Injury"],
+    "symptoms": ["Joint pain", "Swelling", "Stiffness"],
+    "treatments": ["Pain relievers", "Physical therapy"]
+  },
+  {
+    "disease": "Cancer",
+    "description": "Uncontrolled cell growth",
+    "causes": ["Genetics", "Lifestyle factors", "Environmental exposures"],
+    "symptoms": ["Fatigue", "Weight loss"],
+    "treatments": ["Chemotherapy", "Radiation therapy", "Surgery"]
+  },
+  {
+    "disease": "COVID-19",
+    "description": "Respiratory illness caused by SARS-CoV-2",
+    "causes": ["Coronavirus infection"],
+    "symptoms": ["Fever", "Cough", "Loss of taste"],
+    "treatments": ["Antivirals", "Supportive care", "Vaccination"]
+  },
+  {
+    "disease": "Migraine",
+    "description": "Severe headache often accompanied by nausea",
+    "causes": ["Genetics", "Triggers like stress"],
+    "symptoms": ["Headache", "Sensitivity to light"],
+    "treatments": ["Pain relievers", "Rest", "Avoiding triggers"]
+  },
+  {
+    "disease": "Alzheimer's",
+    "description": "Neurodegenerative disease causing memory loss",
+    "causes": ["Genetic factors", "Age"],
+    "symptoms": ["Memory loss", "Confusion"],
+    "treatments": ["Medications", "Cognitive therapy"]
+  },
+  {
+    "disease": "Tuberculosis",
+    "description": "Bacterial infection affecting the lungs",
+    "causes": ["Mycobacterium tuberculosis"],
+    "symptoms": ["Cough", "Weight loss", "Night sweats"],
+    "treatments": ["Antibiotic regimen"]
+  },
+  {
+    "disease": "Eczema",
+    "description": "A condition causing inflamed, itchy skin",
+    "causes": ["Genetics", "Allergens"],
+    "symptoms": ["Itchy rash", "Red patches"],
+    "treatments": ["Moisturizers", "Steroids"]
+  },
+  {
+    "disease": "Depression",
+    "description": "A mood disorder characterized by persistent sadness",
+    "causes": ["Genetics", "Life events"],
+    "symptoms": ["Low mood", "Loss of interest"],
+    "treatments": ["Antidepressants", "Therapy"]
+  },
+  {
+    "disease": "Anxiety Disorder",
+    "description": "A disorder causing excessive worry",
+    "causes": ["Stress", "Genetics"],
+    "symptoms": ["Restlessness", "Rapid heartbeat"],
+    "treatments": ["Therapy", "Medications"]
+  },
+  {
+    "disease": "Osteoporosis",
+    "description": "A condition where bones become weak and brittle",
+    "causes": ["Aging", "Hormonal changes"],
+    "symptoms": ["Bone fractures"],
+    "treatments": ["Calcium supplements", "Exercise"]
+  },
+  {
+    "disease": "Allergic Rhinitis",
+    "description": "An allergic reaction causing sneezing and congestion",
+    "causes": ["Pollen", "Dust mites"],
+    "symptoms": ["Sneezing", "Runny nose"],
+    "treatments": ["Antihistamines", "Nasal sprays"]
+  },
+  {
+    "disease": "Rheumatoid Arthritis",
+    "description": "Chronic autoimmune inflammatory disorder affecting joints",
+    "causes": [
+      "Genetic predisposition",
+      "Environmental triggers",
+      "Hormonal factors"
+    ],
+    "symptoms": [
+      "Joint stiffness",
+      "Symmetrical swelling",
+      "Fatigue",
+      "Morning stiffness"
+    ],
+    "treatments": ["Methotrexate", "Biologics", "NSAIDs"]
+  },
+  {
+    "disease": "Parkinson's Disease",
+    "description": "Neurodegenerative disorder affecting movement",
+    "causes": [
+      "Dopamine deficiency",
+      "Genetic mutations",
+      "Environmental toxins"
+    ],
+    "symptoms": ["Tremors", "Bradykinesia", "Postural instability", "Rigidity"],
+    "treatments": ["Levodopa", "Deep Brain Stimulation", "Dopamine agonists"]
+  },
+  {
+    "disease": "Multiple Sclerosis",
+    "description": "Demyelinating disease of CNS nerves",
+    "causes": [
+      "Autoimmune dysfunction",
+      "Vitamin D deficiency",
+      "Epstein-Barr virus"
+    ],
+    "symptoms": [
+      "Vision loss",
+      "Muscle weakness",
+      "Balance issues",
+      "Cognitive changes"
+    ],
+    "treatments": ["Interferon beta", "Ocrelizumab", "Physical therapy"]
+  },
+  {
+    "disease": "Crohn's Disease",
+    "description": "Inflammatory bowel disease",
+    "causes": [
+      "Immune system dysfunction",
+      "Gut microbiome imbalance",
+      "Genetic factors"
+    ],
+    "symptoms": ["Abdominal pain", "Diarrhea", "Weight loss", "Fatigue"],
+    "treatments": [
+      "Corticosteroids",
+      "Biologic therapy",
+      "Dietary modifications"
+    ]
+  },
+  {
+    "disease": "Melanoma",
+    "description": "Malignant skin cancer",
+    "causes": ["UV exposure", "Fair skin", "Dysplastic nevi"],
+    "symptoms": ["Changing mole", "Asymmetric lesions", "Itching", "Bleeding"],
+    "treatments": ["Surgical excision", "Immunotherapy", "Targeted therapy"]
   }
 ]

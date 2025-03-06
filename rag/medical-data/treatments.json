@@ -1,14 +1,136 @@
 [
   {
-    "treatment": "Metformin",
-    "used_for": ["Diabetes Type 2"],
-    "dosage": "500mg twice daily",
-    "side_effects": ["Nausea", "Diarrhea", "Weight loss"]
+    "treatment": "Chemotherapy",
+    "used_for": ["Cancer", "Lymphoma", "Leukemia", "Metastatic Cancers"],
+    "dosage": "Cycle-dependent (21-28 day cycles)",
+    "side_effects": [
+      "Nausea",
+      "Hair loss",
+      "Fatigue",
+      "Neutropenia",
+      "Neuropathy"
+    ]
   },
   {
-    "treatment": "ACE inhibitors",
-    "used_for": ["Hypertension"],
-    "dosage": "10mg once daily",
-    "side_effects": ["Cough", "Dizziness", "Increased potassium levels"]
+    "treatment": "Radiation Therapy",
+    "used_for": ["Cancer", "Breast Cancer", "Prostate Cancer", "Brain Tumors"],
+    "dosage": "2-5 sessions/week for 4-8 weeks",
+    "side_effects": [
+      "Skin irritation",
+      "Fatigue",
+      "Hair loss in treatment area"
+    ]
+  },
+  {
+    "treatment": "Insulin Therapy",
+    "used_for": ["Diabetes", "Type 1 Diabetes", "Gestational Diabetes"],
+    "dosage": "0.5-1 unit/kg/day",
+    "side_effects": ["Hypoglycemia", "Weight gain", "Injection site reactions"]
+  },
+  {
+    "treatment": "Physical Therapy",
+    "used_for": ["Injury Recovery"],
+    "dosage": "30 minutes daily",
+    "side_effects": ["Muscle soreness"]
+  },
+  {
+    "treatment": "Antibiotic Treatment",
+    "used_for": ["Bacterial Infections"],
+    "dosage": "500mg twice daily",
+    "side_effects": ["Diarrhea", "Allergic reactions"]
+  },
+  {
+    "treatment": "Antiviral Therapy",
+    "used_for": ["Viral Infections"],
+    "dosage": "200mg daily",
+    "side_effects": ["Headache", "Nausea"]
+  },
+  {
+    "treatment": "Cognitive Behavioral Therapy",
+    "used_for": ["Depression", "Anxiety", "Anxiety Disorders", "PTSD"],
+    "dosage": "50-minute weekly sessions",
+    "side_effects": ["Emotional discomfort", "Temporary anxiety increase"]
+  },
+  {
+    "treatment": "Immunotherapy",
+    "used_for": ["Autoimmune Diseases", "Cancer"],
+    "dosage": "Variable",
+    "side_effects": ["Fatigue", "Skin rash"]
+  },
+  {
+    "treatment": "Hormone Replacement Therapy",
+    "used_for": ["Menopause"],
+    "dosage": "1 patch per week",
+    "side_effects": ["Mood swings", "Weight gain"]
+  },
+  {
+    "treatment": "Dialysis",
+    "used_for": [
+      "Kidney Failure",
+      "Chronic Kidney Disease",
+      "Acute Renal Failure"
+    ],
+    "dosage": "3-4 hour sessions 3x/week",
+    "side_effects": ["Low blood pressure", "Cramps", "Infection risk"]
+  },
+  {
+    "treatment": "Antidepressant Therapy",
+    "used_for": ["Depression", "Anxiety"],
+    "dosage": "20mg daily",
+    "side_effects": ["Drowsiness", "Dry mouth"]
+  },
+  {
+    "treatment": "Anticoagulant Therapy",
+    "used_for": ["Blood Clots"],
+    "dosage": "5mg daily",
+    "side_effects": ["Bleeding"]
+  },
+  {
+    "treatment": "Warfarin",
+    "used_for": ["Atrial Fibrillation", "Deep Vein Thrombosis"],
+    "dosage": "2-10mg daily (INR monitored)",
+    "side_effects": ["Bleeding risk", "Bruising", "Hair thinning"]
+  },
+  {
+    "treatment": "Beta Blockers",
+    "used_for": ["Hypertension", "Heart Arrhythmia"],
+    "dosage": "50mg daily",
+    "side_effects": ["Fatigue", "Cold extremities"]
+  },
+  {
+    "treatment": "Steroid Therapy",
+    "used_for": ["Inflammation"],
+    "dosage": "10mg daily",
+    "side_effects": ["Weight gain", "Mood swings"]
+  },
+  {
+    "treatment": "Antibiotic Prophylaxis",
+    "used_for": ["Prevention of infection"],
+    "dosage": "250mg daily",
+    "side_effects": ["Nausea", "Diarrhea"]
+  },
+  {
+    "treatment": "CPAP Therapy",
+    "used_for": ["Obstructive Sleep Apnea"],
+    "dosage": "Nightly use",
+    "side_effects": ["Nasal congestion", "Dry mouth", "Skin irritation"]
+  },
+  {
+    "treatment": "Antiretroviral Therapy",
+    "used_for": ["HIV/AIDS"],
+    "dosage": "Combination daily regimen",
+    "side_effects": ["Lipodystrophy", "GI disturbances", "Liver toxicity"]
+  },
+  {
+    "treatment": "Bronchodilators",
+    "used_for": ["Asthma", "COPD"],
+    "dosage": "2 puffs every 4-6 hours",
+    "side_effects": ["Tachycardia", "Tremors", "Hypokalemia"]
+  },
+  {
+    "treatment": "Immunosuppressants",
+    "used_for": ["Organ Transplant", "Autoimmune Diseases"],
+    "dosage": "Weight-based dosing",
+    "side_effects": ["Infection risk", "Hypertension", "Nephrotoxicity"]
   }
 ]
