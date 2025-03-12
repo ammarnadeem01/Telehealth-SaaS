@@ -38,6 +38,11 @@ export function Sidebar() {
           label: "Medical History",
           href: "/user/medical-history",
         },
+        {
+          icon: FileText,
+          label: "Health Records",
+          href: "/user/health-records",
+        },
       ],
     },
     {

@@ -9,7 +9,7 @@ def get_rag_pipeline(prompt_template):
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
     llm = get_llm()
 
-    prompt_template_str = prompt_template+"BE SATIRICAL AND DONT GIVE A DAMN"
+    prompt_template_str = prompt_template
     
     prompt = PromptTemplate(
         template=prompt_template_str,

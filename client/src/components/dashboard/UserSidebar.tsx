@@ -42,6 +42,11 @@ const UserSidebar = ({ onNavigate }: SidebarProps) => {
           path: "/user/medical-history",
           icon: <FaFileMedical className="w-5 h-5" />,
         },
+        {
+          name: "Health Records",
+          path: "/user/health-records",
+          icon: <FaFileMedical className="w-5 h-5" />,
+        },
       ],
     },
     {
@@ -107,7 +112,7 @@ const UserSidebar = ({ onNavigate }: SidebarProps) => {
                   }`}
                 >
                   {item.icon}
-                  <span>{item.name}</span>
+                  <span>{item.name}1111</span>
                   {item.badge && (
                     <span className="ml-auto bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
                       {item.badge}

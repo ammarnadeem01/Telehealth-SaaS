@@ -34,6 +34,7 @@ import { PatientManagement } from "./pages/Doctor/PatientManagement";
 import { MedicalRecords } from "./pages/Doctor/MedicalRecords";
 import { Prescriptions } from "./pages/Doctor/Prescriptions";
 import { VideoConsults } from "./pages/Doctor/VideoConsults";
+import HealthRecords from "./pages/User/Dashboard/HealthRecords";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
         <Route path="appointments" element={<AppointmentsUser />} />
         <Route path="messages" element={<Messages />} />
         <Route path="video-consult" element={<VideoConsult />} />
+        <Route path="health-records" element={<HealthRecords />} />
       </Route>
 
       {/* PROTECTED ROUTES */}

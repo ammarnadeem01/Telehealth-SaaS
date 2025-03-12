@@ -3,39 +3,38 @@ interface TimeSlot {
   startTime: string;
   endTime: string;
 }
-interface AvailableSlot {
-  day: string;
-  slots: TimeSlot[];
-}
+
 interface IDoctorAvaiability {
   doctor: mongoose.Schema.Types.ObjectId;
-  availableSlots: AvailableSlot[];
+  availableSlots: Map<string, TimeSlot[]>;
 }
 
-const doctorAvailabilitySchema: Schema<IDoctorAvaiability> = new Schema({
-  doctor: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true,
-  },
-  availableSlots: [
-    {
-      day: { type: String, required: true },
-      slots: [
+const doctorAvailabilitySchema: Schema<IDoctorAvaiability> = new Schema(
+  {
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+    availableSlots: {
+      type: Map,
+      of: [
         {
           startTime: { type: String, required: true },
           endTime: { type: String, required: true },
         },
       ],
+      required: true,
     },
-  ],
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = mongoose.model("DoctorAvailability", doctorAvailabilitySchema);
-
-const DoctorAvaiability = mongoose.model<IDoctorAvaiability>(
-  "DoctorAvaiability",
+const DoctorAvailability = mongoose.model<IDoctorAvaiability>(
+  "DoctorAvailability",
   doctorAvailabilitySchema
 );
-export default DoctorAvaiability;
+export default DoctorAvailability;

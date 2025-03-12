@@ -19,44 +19,40 @@ export enum PaymentStatus {
 
 export interface IAppointment {
   name: String;
-  participants: mongoose.Types.ObjectId[];
+  doctor: mongoose.Types.ObjectId;
+  patient: mongoose.Types.ObjectId;
   date: Date;
   status: AppointmentStatus;
   type: AppointmentType;
   notes?: string;
   paymentStatus: PaymentStatus;
-  createdAt: Date;
-  updatedAt: Date;
-  startTime: string;
-  endTime: string;
+  slots: Number;
 }
 
 const appointmentSchema: Schema<IAppointment> = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      // required: true,
       maxlength: 100,
     },
-    startTime: {
-      type: String,
-      required: true,
+    date: {
+      type: Date,
     },
-    endTime: {
-      type: String,
-      required: true,
-    },
-    participants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-    ],
     status: {
       type: String,
       enum: Object.values(AppointmentStatus),
       default: AppointmentStatus.SCHEDULED,
+    },
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    patient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     type: {
       type: String,
@@ -72,11 +68,35 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       enum: Object.values(PaymentStatus),
       default: PaymentStatus.PENDING,
     },
+    slots: {
+      type: Number,
+      required: true,
+      // validate: {
+      //   validator: (slots: string[]) =>
+      //     slots.every((time) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(time)),
+      //   message: "Invalid time format in slots",
+      // },
+    },
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+// appointmentSchema.virtual("startTime").get(function () {
+//   return this.slots[0];
+// });
+
+// appointmentSchema.virtual("endTime").get(function () {
+//   if (this.slots.length === 0) return null;
+//   const lastSlot = this.slots[this.slots.length - 1];
+//   const [hours, minutes] = lastSlot.split(":").map(Number);
+//   return `${String(hours).padStart(
+//     2,
+//     "0"
+//   )}:${String(minutes + 29).padStart(2, "0")}`;
+// });
 
 const Appointment = mongoose.model<IAppointment>(
   "Appointment",
