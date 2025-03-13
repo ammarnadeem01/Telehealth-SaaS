@@ -4,7 +4,33 @@ import moment from "moment-timezone";
 // import { addAppointmentToGoogleCalendar } from "../utils/googleCalendar";
 import { createCalendarEvent } from "../utils/googleCalendar";
 import DoctorAvailability from "@models/doctor_availability";
+import { google } from "googleapis";
 import User, { IUser } from "@models/User";
+import { GaxiosResponse } from "gaxios";
+import { calendar_v3 } from "googleapis";
+
+async function addEventToGoogleCalendar(
+  calendarToken: any,
+  event: calendar_v3.Schema$Event // Ensure proper typing
+): Promise<calendar_v3.Schema$Event | undefined> {
+  const oAuth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_URI
+  );
+  oAuth2Client.setCredentials(calendarToken);
+
+  const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+
+  // Fixing the type of the response
+  const response: GaxiosResponse<calendar_v3.Schema$Event> =
+    await calendar.events.insert({
+      calendarId: "primary",
+      requestBody: event, // Correct property name instead of 'resource'
+    });
+
+  return response.data; // Ensuring response data access is correctly typed
+}
 
 export const bookAppointment = async (req: Request, res: Response) => {
   try {
@@ -121,7 +147,58 @@ export const bookAppointment = async (req: Request, res: Response) => {
       type,
       slots: duration / 30,
     });
+    // Prepare event details for Google Calendar.
+    // Note: Adjust the summary/description as needed.
+    const patientEvent = {
+      summary: `Appointment with Dr. ${doctorObj.name || "Doctor"}`,
+      description: `Appointment type: ${type}`,
+      start: {
+        dateTime: appointmentStartUTC.toISOString(),
+        timeZone: patientObj.timezone.toString(),
+      },
+      end: {
+        dateTime: appointmentEndUTC.toISOString(),
+        timeZone: patientObj.timezone.toString(),
+      },
+    };
 
+    const doctorEvent = {
+      summary: `Appointment with ${patientObj.name || "Patient"}`,
+      description: `Appointment type: ${type}`,
+      start: {
+        dateTime: appointmentStartUTC.toISOString(),
+        timeZone: doctorObj.timezone.toString(),
+      },
+      end: {
+        dateTime: appointmentEndUTC.toISOString(),
+        timeZone: doctorObj.timezone.toString(),
+      },
+    };
+
+    // Add events to Google Calendar for both patient and doctor.
+    // These calls assume that each user object has a valid googleCalendarToken.
+    // They are wrapped in try/catch blocks so that a failure to add an event won't block the appointment booking.
+    try {
+      if (patientObj.googleCalendarToken) {
+        await addEventToGoogleCalendar(
+          patientObj.googleCalendarToken,
+          patientEvent
+        );
+      }
+    } catch (err) {
+      console.error("Error adding event to patient calendar", err);
+    }
+
+    try {
+      if (doctorObj.googleCalendarToken) {
+        await addEventToGoogleCalendar(
+          doctorObj.googleCalendarToken,
+          doctorEvent
+        );
+      }
+    } catch (err) {
+      console.error("Error adding event to doctor calendar", err);
+    }
     res
       .status(201)
       .json({ message: "Appointment booked successfully", appointment });
@@ -129,7 +206,6 @@ export const bookAppointment = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
 const generateSlots = (start: string, end: string): string[] => {
   const slots: string[] = [];
   let current = parseTime(start);
@@ -141,18 +217,15 @@ const generateSlots = (start: string, end: string): string[] => {
   }
   return slots;
 };
-
 const parseTime = (time: string): number => {
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
 };
-
 const formatMinutesToTime = (minutes: number): string => {
   return `${Math.floor(minutes / 60)
     .toString()
     .padStart(2, "0")}:${(minutes % 60).toString().padStart(2, "0")}`;
 };
-
 // export const getAvailableSlots = async (
 //   doctorId: string,
 //   date: Date,
@@ -195,7 +268,6 @@ const formatMinutesToTime = (minutes: number): string => {
 
 //   return available;
 // };
-
 export const getAllAppointments = async (req: Request, res: Response) => {
   try {
     const appointments = await Appointment.find();
@@ -249,7 +321,88 @@ export const getAppointmentById = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+export const getDoctorAppointments = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.query;
 
+    if (!userId) {
+      res.status(400).json({ message: "Missing userId in query" });
+      return;
+    }
+
+    // Verify doctor exists and get timezone
+    const doctor = await User.findById(userId);
+    if (!doctor || doctor.role !== "doctor") {
+      res.status(404).json({ message: "Doctor not found" });
+      return;
+    }
+
+    // Get all appointments for this doctor
+    const appointments = await Appointment.find({ doctor: userId })
+      .populate("doctor")
+      .populate("patient");
+
+    // Convert to doctor's timezone
+    const timezone = doctor.timezone || "UTC";
+    const converted = appointments.map((app: any) => {
+      const start = moment(app.date).tz(timezone as string);
+      const end = start.clone().add(app.slots * 30, "minutes");
+
+      return {
+        ...app.toObject(),
+        localStart: start.format(),
+        localEnd: end.format(),
+        timezone,
+        duration: app.slots * 30,
+      };
+    });
+
+    res.status(200).json(converted);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+export const getPatientAppointments = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      res.status(400).json({ message: "Missing userId in query" });
+      return;
+    }
+
+    // Verify patient exists and get timezone
+    const patient = await User.findById(userId);
+    if (!patient || patient.role !== "patient") {
+      res.status(404).json({ message: "Patient not found" });
+      return;
+    }
+
+    // Get all appointments for this patient
+    const appointments = await Appointment.find({ patient: userId })
+      .populate("doctor")
+      .populate("patient");
+
+    // Convert to patient's timezone
+    const timezone = patient.timezone || "UTC";
+    const converted = appointments.map((app: any) => {
+      const start = moment(app.date).tz(timezone as string);
+      const end = start.clone().add(app.slots * 30, "minutes");
+
+      return {
+        ...app.toObject(),
+        localStart: start.format(),
+        localEnd: end.format(),
+        timezone,
+        duration: app.slots * 30,
+      };
+    });
+
+    res.status(200).json(converted);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 export const updateAppointment = async (req: Request, res: Response) => {
   try {
     const updatedAppointment = await Appointment.findByIdAndUpdate(
@@ -274,7 +427,6 @@ export const updateAppointment = async (req: Request, res: Response) => {
       .json({ success: false, message: "Error updating appointment", error });
   }
 };
-
 export const deleteAppointment = async (req: Request, res: Response) => {
   try {
     const deletedAppointment = await Appointment.findByIdAndDelete(

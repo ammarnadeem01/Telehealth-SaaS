@@ -21,6 +21,9 @@ export interface IUser {
   updatedAt: Date;
   resetToken: string;
   timezone: String;
+  googleCalendarToken?: string;
+  googleRefreshToken?: string;
+  googleCalendarId?: string;
   comparePasswords: (passwd: string, comparePasswd: string) => {};
 }
 const userSchema: Schema<IUser> = new Schema(
@@ -85,6 +88,9 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
 
       default: "UTC",
+    },
+    googleCalendarToken: {
+      type: String,
     },
   },
   {

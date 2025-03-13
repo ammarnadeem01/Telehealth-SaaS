@@ -102,6 +102,7 @@ const Login = () => {
           <a href="/signup" className="text-sm text-blue-500 hover:underline">
             Don't have an account? Sign Up
           </a>
+          <a href="http://localhost:3000/auth/google">Login With Google</a>
         </div>
       </div>
     </div>

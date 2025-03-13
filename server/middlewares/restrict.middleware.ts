@@ -1,38 +1,43 @@
 import User from "@models/User";
 import { NextFunction, Request, Response } from "express";
 
-export const restrict = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  roles: string[]
-) => {
-  try {
-    const { id } = req.body;
-    if (!id) {
-      res.status(404).json({
+export const restrict = (roles: string[]) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      console.log(1111111);
+      console.log(req);
+      const { patientId } = req.body;
+      if (!patientId) {
+        res.status(404).json({
+          status: "Fail",
+          message: "User ID is required...",
+        });
+        return;
+      }
+      console.log(1111111);
+      const user = await User.findById(patientId);
+      if (!user) {
+        res.status(404).json({
+          status: "Fail",
+          message: "User not found...",
+        });
+        return;
+      }
+      console.log(1111111);
+      if (roles.includes(user.role)) {
+        next();
+        return;
+      }
+      console.log(1111111);
+      res.status(403).json({
         status: "Fail",
-        message: "User Id is requiered...",
+        message: "Sorry... You are not allowed to access this route.",
       });
-      return;
-    }
-    const user = await User.findById(id);
-    if (!user) {
-      res.status(404).json({
+    } catch (error: any) {
+      res.status(500).json({
         status: "Fail",
-        message: "User not found...",
+        message: error.message || "Internal Server Error",
       });
-      return;
     }
-    if (roles && roles.includes(user.role)) next();
-    res.status(404).json({
-      status: "Fail",
-      message: "Sorry... You are not allowed to access this route.",
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "Fail",
-      message: error,
-    });
-  }
+  };
 };

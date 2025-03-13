@@ -1,24 +1,36 @@
-// import express from "express";
+import express from "express";
+import { restrict } from "middlewares/restrict.middleware";
+import {
+  createMedicalRecord,
+  deleteRecord,
+  downloadReport,
+  getPatientRecords,
+  getSingleRecord,
+  getUserRecords,
+  updateMedicalRecord,
+} from "@controllers/medical_records";
+import { upload } from "../utils/fileStorage";
 
-// import { createMedicalRecord } from "@controllers/medical_records";
-// const router = express.Router();
-// router.post("/create-medical-record", createMedicalRecord);
-// import { authenticateToken } from "middlewares/protect.middleware";
-// router.post("/", authenticateToken, authorize(["doctor"]), createMedicalRecord);
-// router.get("/:id", authenticateToken, getMedicalRecord);
-// router.get("/patient/:patientId", authenticateToken, getPatientRecords);
-// router.get("/doctor/:doctorId", authenticateToken, getDoctorRecords);
-// router.delete(
-//   "/:id",
-//   authenticate,
-//   authorize([Roles.DOCTOR]),
-//   deleteMedicalRecord
-// );
-// router.patch(
-//   "/:id",
-//   authenticate,
-//   authorize([Roles.DOCTOR]),
-//   updateMedicalRecord
-// );
+const router = express.Router();
 
-// export default router;
+// Routes
+router
+  .route("/create-medical-record")
+  .post(
+    upload.single("file"),
+    restrict(["admin", "doctor", "patient"]),
+    createMedicalRecord
+  );
+router.get("/patient/:patientId", getPatientRecords);
+router.get("/:id", getSingleRecord);
+router.get("/:id/download", downloadReport);
+router.put(
+  "/:id",
+  restrict(["doctor", "admin"]),
+  upload.single("file"),
+  updateMedicalRecord
+);
+router.delete("/:id", restrict(["admin"]), deleteRecord);
+router.get("/user/:userId", restrict(["doctor", "admin"]), getUserRecords);
+
+export default router;
