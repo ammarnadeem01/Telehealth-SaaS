@@ -1,6 +1,8 @@
-import express from "express";
+import express, { Request, Response } from "express";
 const app = express();
 import cors from "cors";
+import Stripe from "stripe";
+import http from "http";
 import hpp from "hpp"; // http paramter pollution
 import rateLimit from "express-rate-limit"; // limited no of req
 import sanitize from "express-mongo-sanitize"; // sanitize for hacker attacks- nosql query
@@ -12,13 +14,17 @@ import DoctorAvaiabilityRouter from "@routes/doctor_availability";
 import MedicalRecordsRouter from "@routes/medical_records";
 import passport from "../server/services/passportConfig";
 import jwt from "jsonwebtoken";
+import { chatSocketHandler } from "./sockets/chat";
+import { webrtcSocketHandler } from "./sockets/webrtc";
+import { Server } from "socket.io";
+import Appointment from "@models/appointment";
 // app.use(helmet());
 // app.use(sanitize());
 // let limtier = rateLimit({
 //   max: 1, // 1 req per ip {fot testin purposes}
 //   windowMs: 6000,
 //   message:
-//     "We have received too many requests from this ip. Please try again later.",
+//     "We have received too many requests from this device. Please try again later.",
 // });
 // app.use("/api", limtier);
 // app.use(xss());
@@ -27,11 +33,12 @@ import jwt from "jsonwebtoken";
 //   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 //   credentials: true,
 // };
-
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+app.use("/uploads", express.static("uploads"));
 
 app.get(
   "/auth/google",
@@ -40,6 +47,27 @@ app.get(
     scope: ["profile", "email", "https://www.googleapis.com/auth/calendar"],
   })
 );
+app.post("/create-payment-intent", async (req: any, res: any) => {
+  try {
+    const { appointmentId } = req.body;
+
+    // Find appointment details
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment)
+      return res.status(404).json({ error: "Appointment not found" });
+
+    // Create Payment Intent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: (appointment.amount as number) * 100,
+      currency: "usd",
+      payment_method_types: ["card"],
+    });
+
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+});
 
 app.get(
   "/auth/google/callback",
@@ -97,9 +125,21 @@ app.get(
     });
   }
 );
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 
+// When a new socket connects, pass it to our handlers
+io.on("connection", (socket) => {
+  console.log("New socket connected:", socket.id);
+  chatSocketHandler(io, socket);
+  webrtcSocketHandler(io, socket);
+});
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/appointment", AppointmentRouter);
 app.use("/api/v1/doctorAvailability", DoctorAvaiabilityRouter);
 app.use("/api/v1/medicalRecords", MedicalRecordsRouter);
-export default app;
+export default server;

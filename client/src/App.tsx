@@ -35,6 +35,7 @@ import { MedicalRecords } from "./pages/Doctor/MedicalRecords";
 import { Prescriptions } from "./pages/Doctor/Prescriptions";
 import { VideoConsults } from "./pages/Doctor/VideoConsults";
 import HealthRecords from "./pages/User/Dashboard/HealthRecords";
+import Payment from "./pages/Payment/Payment";
 
 function App() {
   return (
@@ -86,6 +87,12 @@ function App() {
         <Route path="/profile" element={<Profile />} />
       </Route>
       <Route path="/unauthorized" element={<Unauthorized />} />
+
+      {/* PAYMENT */}
+      <Route
+        path="payment"
+        element={<Payment appointmentId="67d3f29b80725d3bfc9363e8" />}
+      />
     </Routes>
   );
 }

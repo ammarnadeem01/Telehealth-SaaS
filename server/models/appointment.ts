@@ -27,6 +27,7 @@ export interface IAppointment {
   notes?: string;
   paymentStatus: PaymentStatus;
   slots: Number;
+  amount: Number;
 }
 
 const appointmentSchema: Schema<IAppointment> = new Schema(
@@ -77,6 +78,10 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       //   message: "Invalid time format in slots",
       // },
     },
+    amount: {
+      type: Number, // Add the amount field
+      default: 0, // Optional: Set a default value
+    },
   },
   {
     timestamps: true,
@@ -84,19 +89,17 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
     toObject: { virtuals: true },
   }
 );
-// appointmentSchema.virtual("startTime").get(function () {
-//   return this.slots[0];
-// });
 
-// appointmentSchema.virtual("endTime").get(function () {
-//   if (this.slots.length === 0) return null;
-//   const lastSlot = this.slots[this.slots.length - 1];
-//   const [hours, minutes] = lastSlot.split(":").map(Number);
-//   return `${String(hours).padStart(
-//     2,
-//     "0"
-//   )}:${String(minutes + 29).padStart(2, "0")}`;
-// });
+appointmentSchema.pre("save", async function (next) {
+  if (this.isNew || this.isModified("slots") || this.isModified("doctor")) {
+    const doctor = await mongoose.model("User").findById(this.doctor);
+    if (!doctor || !doctor.feePerSlot) {
+      return next(new Error("Doctor's fee per slot is missing"));
+    }
+    this.amount = doctor.feePerSlot * (this.slots as number);
+  }
+  next();
+});
 
 const Appointment = mongoose.model<IAppointment>(
   "Appointment",

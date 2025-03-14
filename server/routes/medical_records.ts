@@ -31,6 +31,10 @@ router.put(
   updateMedicalRecord
 );
 router.delete("/:id", restrict(["admin"]), deleteRecord);
-router.get("/user/:userId", restrict(["doctor", "admin"]), getUserRecords);
+router.get(
+  "/user/:patientId",
+  restrict(["doctor", "admin", "patient"]),
+  getUserRecords
+);
 
 export default router;

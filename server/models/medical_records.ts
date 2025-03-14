@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 interface IMedicalRecord extends Document {
-  userId: mongoose.Types.ObjectId;
+  doctorId: mongoose.Types.ObjectId;
   patientId: mongoose.Types.ObjectId;
   filePath: string;
   fileName: string;
@@ -12,7 +12,7 @@ interface IMedicalRecord extends Document {
 
 const MedicalRecordSchema = new Schema<IMedicalRecord>(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    doctorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     patientId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     filePath: { type: String, required: true },
     fileName: { type: String, required: true },

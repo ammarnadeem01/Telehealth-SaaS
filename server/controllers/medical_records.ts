@@ -117,10 +117,10 @@ export async function updateMedicalRecord(req: Request, res: Response) {
       return;
     }
 
-    if (req.body.role !== "admin" && record.userId.toString() !== req.body.id) {
-      res.status(403).json({ error: "Unauthorized access" });
-      return;
-    }
+    // if (req.body.role !== "admin" && record.userId.toString() !== req.body.id) {
+    //   res.status(403).json({ error: "Unauthorized access" });
+    //   return;
+    // }
 
     if (req.file) {
       if (fs.existsSync(record.filePath)) {
@@ -166,13 +166,13 @@ export async function deleteRecord(req: Request, res: Response) {
 
 export async function getUserRecords(req: Request, res: Response) {
   try {
-    if (req.body.role !== "admin" && req.params.userId !== req.body.id) {
-      res.status(403).json({ error: "Unauthorized access" });
-      return;
-    }
+    // if (req.body.role !== "admin" && req.params.userId !== req.body.id) {
+    //   res.status(403).json({ error: "Unauthorized access" });
+    //   return;
+    // }
 
     const records = await MedicalRecord.find({
-      userId: req.params.userId,
+      patientId: req.query.patientId,
     }).populate("patientId", "name email");
 
     res.json(records);
