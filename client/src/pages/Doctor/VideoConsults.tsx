@@ -11,13 +11,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 export function VideoConsults() {
   const consultations = [
     { id: 1, patient: "Alice Smith", time: "10:00 AM", status: "upcoming" },
     { id: 2, patient: "Bob Wilson", time: "2:30 PM", status: "completed" },
   ];
-
+  const nav = useNavigate();
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Video Consultations</h1>
@@ -63,10 +64,10 @@ export function VideoConsults() {
                       className="gap-1"
                     >
                       {consult.status === "upcoming" ? (
-                        <>
+                        <div onClick={() => nav("/doctor/videoChat")}>
                           <Video className="h-4 w-4" />
                           Join
-                        </>
+                        </div>
                       ) : (
                         <>
                           <Phone className="h-4 w-4" />

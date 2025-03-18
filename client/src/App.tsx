@@ -34,8 +34,10 @@ import { PatientManagement } from "./pages/Doctor/PatientManagement";
 import { MedicalRecords } from "./pages/Doctor/MedicalRecords";
 import { Prescriptions } from "./pages/Doctor/Prescriptions";
 import { VideoConsults } from "./pages/Doctor/VideoConsults";
+import { Messages as Mess } from "./pages/Doctor/DocMessage";
 import HealthRecords from "./pages/User/Dashboard/HealthRecords";
 import Payment from "./pages/Payment/Payment";
+import VideoChat from "./pages/Doctor/VideoChat";
 
 function App() {
   return (
@@ -54,6 +56,8 @@ function App() {
         <Route path="records" element={<MedicalRecords />} />
         <Route path="prescriptions" element={<Prescriptions />} />
         <Route path="consults" element={<VideoConsults />} />
+        <Route path="messages" element={<Mess />} />
+        <Route path="videoChat" element={<VideoChat />} />
         {/* Add other doctor routes */}
       </Route>
       {/* ADMIN DASHBOARD */}

@@ -44,6 +44,11 @@ export function DoctorSidebar() {
           icon: <FileText className="h-4 w-4" />,
         },
         {
+          label: "Messages",
+          href: "/doctor/messages",
+          icon: <Video className="h-4 w-4" />,
+        },
+        {
           label: "Video Consults",
           href: "/doctor/consults",
           icon: <Video className="h-4 w-4" />,

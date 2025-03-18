@@ -20,7 +20,7 @@
 //   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
 // };
 
-// export default function VideoConsult() {
+// export default function VideoChat() {
 //   const [isMuted, setIsMuted] = useState(false);
 //   const [isVideoOn, setIsVideoOn] = useState(true);
 //   const [message, setMessage] = useState("");
@@ -241,6 +241,7 @@
 //     </div>
 //   );
 // }
+
 import { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

@@ -11,7 +11,7 @@ const socket = io("http://localhost:3000");
 import { useAuthStore } from "@/store/authStore";
 import axios from "axios";
 
-export default function Messages() {
+export function Messages() {
   const userId = useAuthStore((state) => state.userId);
   const [conversations, setConversations] = useState<any[]>();
   const [selectedConversation, setSelectedConversation] = useState<
@@ -23,7 +23,7 @@ export default function Messages() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/v1/chat/doctor/${userId}`)
+      .get(`http://localhost:3000/api/v1/chat/patient/${userId}`)
       .then((response) => {
         console.log(response);
         setConversations(response.data);
@@ -91,7 +91,7 @@ export default function Messages() {
                   <div
                     key={convo.id}
                     onClick={() => {
-                      setSelectedReceiver(convo.doctor);
+                      setSelectedReceiver(convo.patient);
                       setSelectedConversation(convo._id);
                     }}
                     className={`p-4 cursor-pointer rounded-lg ${
