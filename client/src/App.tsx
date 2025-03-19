@@ -38,66 +38,88 @@ import { Messages as Mess } from "./pages/Doctor/DocMessage";
 import HealthRecords from "./pages/User/Dashboard/HealthRecords";
 import Payment from "./pages/Payment/Payment";
 import VideoChat from "./pages/Doctor/VideoChat";
+import LandingPage from "./pages/User/LandingPage";
+import PrivacyPolicy from "./pages/Legal/PrivacyPolicy";
+import Security from "./pages/Legal/Security";
+import TermsOfService from "./pages/Legal/TermsOfService";
+import AboutUs from "./components/AboutUs";
+import Pricing from "./components/Pricing";
+import DoctorList from "./pages/User/Doctors";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <Routes>
-      {/* AUTH */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password/:token" element={<ResetPassword />} />
-      <Route path="/email-sent" element={<EmailSent />} />
-      {/* DOCTOR DASHBOARD */}
-      <Route path="/doctor" element={<DoctorLayout />}>
-        <Route index element={<DoctorDashboard />} />
-        <Route path="appointments" element={<DoctorAppointments />} />
-        <Route path="patients" element={<PatientManagement />} />
-        <Route path="records" element={<MedicalRecords />} />
-        <Route path="prescriptions" element={<Prescriptions />} />
-        <Route path="consults" element={<VideoConsults />} />
-        <Route path="messages" element={<Mess />} />
-        <Route path="videoChat" element={<VideoChat />} />
-        {/* Add other doctor routes */}
-      </Route>
-      {/* ADMIN DASHBOARD */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="appointments" element={<AppointmentManagement />} />
-        <Route path="roles" element={<RolesPermissions />} />
-        <Route path="audit" element={<AuditLogs />} />
-        <Route path="settings" element={<SystemSettings />} />
-        <Route path="resources" element={<MedicalResources />} />
-      </Route>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/doctorlist" element={<DoctorList />} />
+        {/* AUTH */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/email-sent" element={<EmailSent />} />
+        {/* DOCTOR DASHBOARD */}
+        <Route path="/doctor" element={<DoctorLayout />}>
+          <Route index element={<DoctorDashboard />} />
+          <Route path="appointments" element={<DoctorAppointments />} />
+          <Route path="patients" element={<PatientManagement />} />
+          <Route path="records" element={<MedicalRecords />} />
+          <Route path="prescriptions" element={<Prescriptions />} />
+          <Route path="consults" element={<VideoConsults />} />
+          <Route path="messages" element={<Mess />} />
+          <Route path="videoChat" element={<VideoChat />} />
+          {/* Add other doctor routes */}
+        </Route>
+        {/* ADMIN DASHBOARD */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="appointments" element={<AppointmentManagement />} />
+          <Route path="roles" element={<RolesPermissions />} />
+          <Route path="audit" element={<AuditLogs />} />
+          <Route path="settings" element={<SystemSettings />} />
+          <Route path="resources" element={<MedicalResources />} />
+        </Route>
 
-      {/* USER DASHBOARD */}
-      <Route path="/user" element={<DashboardLayout />}>
-        <Route index element={<UserDashboard />} />
-        <Route path="doctors" element={<Doctors />} />
-        <Route path="medical-history" element={<MedicalHistory />} />
-        <Route path="symptom-check" element={<SymptomCheck />} />
-        <Route path="appointments" element={<AppointmentsUser />} />
-        <Route path="messages" element={<Messages />} />
-        <Route path="video-consult" element={<VideoConsult />} />
-        <Route path="health-records" element={<HealthRecords />} />
-      </Route>
+        {/* USER DASHBOARD */}
+        <Route path="/user" element={<DashboardLayout />}>
+          <Route index element={<UserDashboard />} />
+          <Route path="doctors" element={<Doctors />} />
+          <Route path="medical-history" element={<MedicalHistory />} />
+          <Route path="symptom-check" element={<SymptomCheck />} />
+          <Route path="appointments" element={<AppointmentsUser />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="video-consult" element={<VideoConsult />} />
+          <Route path="health-records" element={<HealthRecords />} />
+        </Route>
 
-      {/* PROTECTED ROUTES */}
-      <Route
-        element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
-      ></Route>
-      <Route element={<RoleProtectedRoute allowedRoles={["patient", ""]} />}>
-        <Route path="/profile" element={<Profile />} />
-      </Route>
-      <Route path="/unauthorized" element={<Unauthorized />} />
+        {/* PROTECTED ROUTES */}
+        <Route
+          element={<RoleProtectedRoute allowedRoles={["user", "admin"]} />}
+        ></Route>
+        <Route element={<RoleProtectedRoute allowedRoles={["patient", ""]} />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* PAYMENT */}
-      <Route
-        path="payment"
-        element={<Payment appointmentId="67d3f29b80725d3bfc9363e8" />}
-      />
-    </Routes>
+        {/* PAYMENT */}
+        <Route
+          path="payment"
+          element={<Payment appointmentId="67d3f29b80725d3bfc9363e8" />}
+        />
+
+        {/* LEGAL */}
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/termsofservice" element={<TermsOfService />} />
+      </Routes>
+      <Footer />
+    </>
   );
 }
 
