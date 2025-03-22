@@ -1,80 +1,25 @@
-import apiClient from "../apiClient";
+// src/api/userService.ts
+import api from ".././axiosConfig";
+import { ENDPOINTS, ApiResponse, UserDTO } from ".././endpoints";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface CreateUserDto {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface UpdateUserDto {
-  name?: string;
-  email?: string;
-}
-
-const UserService = {
-  // Get all users
-  getAllUsers: async (): Promise<User[]> => {
-    try {
-      return (await apiClient.get<User[]>("/users")).data;
-    } catch (error) {
-      throw new Error(
-        `Failed to fetch users: ${
-          error instanceof Error ? error.message : error
-        }`
-      );
+export const UserService = {
+  // getAllDoctors: () =>
+  //   api.get<ApiResponse<UserDTO[]>>(ENDPOINTS.USERS.DOCTOR_LIST),
+  getById: (id: string) =>
+    api.get<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id)),
+  // create: (userData: Omit<UserDTO, "id" | "createdAt" | "updatedAt">) =>
+  //   api.post<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DOCTOR_LIST, userData),
+  update: (id: string, userData: Partial<UserDTO>) =>
+    api.patch<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id), userData),
+  delete: (id: string) =>
+    api.delete<ApiResponse<void>>(ENDPOINTS.USERS.DETAIL(id)),
+  register: (
+    userData: Omit<UserDTO, "id" | "createdAt" | "updatedAt"> & {
+      password: string;
+      confirmPassword: string;
+      timezone: string;
     }
-  },
-
-  // Create a user
-  createUser: async (userData: CreateUserDto): Promise<User> => {
-    try {
-      const response = await apiClient.post<User>(
-        "/users/create-user",
-        userData
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        `Failed to create user: ${
-          error instanceof Error ? error.message : error
-        }`
-      );
-    }
-  },
-
-  // Update a user
-  updateUser: async (id: string, userData: UpdateUserDto): Promise<User> => {
-    try {
-      const response = await apiClient.put<User>(`/users/${id}`, userData);
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        `Failed to update user: ${
-          error instanceof Error ? error.message : error
-        }`
-      );
-    }
-  },
-
-  // Delete a user
-  deleteUser: async (id: string): Promise<void> => {
-    try {
-      await apiClient.delete(`/users/${id}`);
-    } catch (error) {
-      throw new Error(
-        `Failed to delete user: ${
-          error instanceof Error ? error.message : error
-        }`
-      );
-    }
-  },
+  ) => api.post<ApiResponse<UserDTO>>(ENDPOINTS.USERS.REGISTER, userData),
+  login: (credentials: { email: string; password: string }) =>
+    api.post<ApiResponse<UserDTO>>(ENDPOINTS.USERS.LOGIN, credentials),
 };
-
-export default UserService;
-export type { User, CreateUserDto, UpdateUserDto };

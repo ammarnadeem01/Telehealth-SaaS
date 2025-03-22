@@ -1,22 +1,11 @@
+// src/components/Login.tsx
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IUser } from "@/interfaces/User";
-import useFetch from "@/hooks/UseFetch";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuthStore } from "../../store/authStore";
-
-const handleLogin = (data: any, _token: string) => {
-  console.log(data);
-  useAuthStore.getState().login({
-    userId: data._id,
-    role: data.role,
-    avatar: data.profilePicture,
-    token: _token,
-    name: data.name,
-    email: data.email,
-  });
-};
+import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
+import { UserService } from "@/api/services/userService";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
@@ -25,7 +14,10 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const Login = () => {
-  const nav = useNavigate();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -33,23 +25,35 @@ const Login = () => {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
-  const { data, loading, error, triggerFetch } = useFetch<IUser>(
-    "http://localhost:3000/api/v1/users/login"
-  );
+
+  const handleLogin = (data: any, token: string) => {
+    useAuthStore.getState().login({
+      userId: data._id,
+      role: data.role,
+      avatar: data.profilePicture,
+      token,
+      name: data.name,
+      email: data.email,
+    });
+  };
 
   const onSubmit = async (formData: LoginFormData) => {
-    await triggerFetch({
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-    if (!loading && data) {
-      console.log(data);
-      handleLogin(data.data, data.token);
-      nav("/profile");
-    }
-    if (error) {
-      console.log(error);
+    setLoading(true);
+    setError(null);
+    try {
+      // Use the login method from our UserService
+      const response: any = await UserService.login(formData);
+      console.log(response);
+      // Assumes the response contains both user data and a token
+      if (response?.data && response.token) {
+        handleLogin(response.data, response.token);
+        navigate("/profile");
+      }
+    } catch (err: any) {
+      console.log(err);
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,18 +95,23 @@ const Login = () => {
           </p>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
             disabled={loading}
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
         <div className="mt-4 text-center">
-          <a href="/signup" className="text-sm text-blue-500 hover:underline">
+          <NavLink
+            to="/signup"
+            className="text-sm text-blue-500 hover:underline"
+          >
             Don't have an account? Sign Up
+          </NavLink>
+          <a href="http://localhost:3000/auth/google" className="block mt-2">
+            Login With Google
           </a>
-          <a href="http://localhost:3000/auth/google">Login With Google</a>
         </div>
       </div>
     </div>

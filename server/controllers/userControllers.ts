@@ -1,6 +1,7 @@
 import User from "@models/User";
 import { NextFunction, Request, Response } from "express";
 import { isValidObjectId } from "mongoose";
+import APIFeatures from "services/API_Features";
 
 export const deleteUser = async (
   req: Request,
@@ -93,6 +94,53 @@ export const updateUser = async (
   }
 };
 
+export const getAllDoctors = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const users = await User.find({ role: "doctor" });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: users,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
+export const getAllPatients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const features = new APIFeatures(User.find({ role: "patient" }), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const users = await features.getQuery();
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: users,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+    });
+  }
+};
 export const getAllUsers = async (
   req: Request,
   res: Response,

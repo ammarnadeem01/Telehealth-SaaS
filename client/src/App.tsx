@@ -6,7 +6,7 @@ import RoleProtectedRoute from "@/pages/Auth/RoleProtectedRoutes";
 import Signup from "@/pages/Auth/Signup";
 import Unauthorized from "@/pages/Auth/Unauthorized";
 import Profile from "@/pages/User/Profile";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
 import Analytics from "./pages/Admin/Dashboard/Analytics";
 import Patients from "./pages/Admin/Dashboard/Patients";
@@ -47,11 +47,21 @@ import Pricing from "./components/Pricing";
 import DoctorList from "./pages/User/Doctors";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import PageNotFound from "./pages/User/PageNotFound";
 
 function App() {
+  const location = useLocation();
+
+  // Hide Navbar & Footer for dashboards (user/, doctor/, admin/)
+  const hideHeaderFooter = !(
+    location.pathname.startsWith("/user") ||
+    (location.pathname.startsWith("/doctor") &&
+      !location.pathname.startsWith("/doctorlist")) ||
+    location.pathname.startsWith("/admin")
+  );
   return (
     <>
-      <Navbar />
+      {hideHeaderFooter && <Navbar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutUs />} />
@@ -117,8 +127,11 @@ function App() {
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
         <Route path="/security" element={<Security />} />
         <Route path="/termsofservice" element={<TermsOfService />} />
+
+        {/* NOT FOUND */}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
-      <Footer />
+      {hideHeaderFooter && <Footer />}
     </>
   );
 }

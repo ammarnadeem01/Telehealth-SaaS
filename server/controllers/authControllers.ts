@@ -44,6 +44,7 @@ export const registerUser = async (req: Request, res: Response) => {
       address,
       timezone,
     }: IUser = req.body;
+    console.log("req.body");
     if (
       !name ||
       !email ||
