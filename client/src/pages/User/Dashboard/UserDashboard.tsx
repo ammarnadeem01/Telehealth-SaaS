@@ -19,49 +19,46 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEffect, useState } from "react";
+import { AppointmentService } from "@/api/services/appointmentService";
+import { useAuthStore } from "@/store/authStore";
 
+const healthMetrics = [
+  {
+    id: 1,
+    name: "Heart Rate",
+    value: "72 BPM",
+    status: "normal",
+    icon: <HeartPulse className="h-4 w-4 text-blue-600" />,
+  },
+  {
+    id: 2,
+    name: "Blood Pressure",
+    value: "120/80 mmHg",
+    status: "normal",
+    icon: <Activity className="h-4 w-4 text-green-600" />,
+  },
+  {
+    id: 3,
+    name: "Medications",
+    value: "2 Active",
+    status: "warning",
+    icon: <Pill className="h-4 w-4 text-orange-600" />,
+  },
+];
 export default function UserDashboard() {
-  const healthMetrics = [
-    {
-      id: 1,
-      name: "Heart Rate",
-      value: "72 BPM",
-      status: "normal",
-      icon: <HeartPulse className="h-4 w-4 text-blue-600" />,
-    },
-    {
-      id: 2,
-      name: "Blood Pressure",
-      value: "120/80 mmHg",
-      status: "normal",
-      icon: <Activity className="h-4 w-4 text-green-600" />,
-    },
-    {
-      id: 3,
-      name: "Medications",
-      value: "2 Active",
-      status: "warning",
-      icon: <Pill className="h-4 w-4 text-orange-600" />,
-    },
-  ];
-
-  const upcomingAppointments = [
-    {
-      id: 1,
-      doctor: "Dr. Sarah Johnson",
-      date: "2024-03-20",
-      time: "10:00 AM",
-      type: "Video Consultation",
-    },
-    {
-      id: 2,
-      doctor: "Dr. Michael Chen",
-      date: "2024-03-22",
-      time: "2:30 PM",
-      type: "In-Person",
-    },
-  ];
-
+  const [upcomingAppointments, setUpcomingAppointments] = useState<any[]>([]);
+  const userId = useAuthStore((state: any) => state.userId);
+  async function setUpcomingAppointmentsFunc() {
+    const response: any = await AppointmentService.upcomingAppointents({
+      userId,
+    });
+    console.log("data", response.data);
+    setUpcomingAppointments(response.data);
+  }
+  useEffect(() => {
+    setUpcomingAppointmentsFunc();
+  }, [userId]);
   return (
     <div className="space-y-4 p-4 bg-gray-50 min-h-screen">
       {/* Health Metrics Grid */}
@@ -111,7 +108,7 @@ export default function UserDashboard() {
                 variant="ghost"
                 className="text-blue-600 hover:bg-blue-50"
               >
-                <Link to="/dashboard/appointments">View All</Link>
+                <Link to="/user/appointments">View All</Link>
               </Button>
             </div>
           </CardHeader>
@@ -120,7 +117,7 @@ export default function UserDashboard() {
               <TableHeader className="bg-gray-50">
                 <TableRow>
                   <TableHead className="text-gray-600">Doctor</TableHead>
-                  <TableHead className="text-gray-600">Date</TableHead>
+                  <TableHead className="text-gray-600">Day/Date</TableHead>
                   <TableHead className="text-gray-600">Time</TableHead>
                   <TableHead className="text-gray-600">Type</TableHead>
                 </TableRow>
@@ -132,13 +129,13 @@ export default function UserDashboard() {
                     className="hover:bg-gray-50 border-gray-200"
                   >
                     <TableCell className="font-medium text-gray-800">
-                      {appointment.doctor}
+                      {appointment.doctor.name}
                     </TableCell>
                     <TableCell className="text-gray-600">
-                      {appointment.date}
+                      {new Date(appointment.date).toDateString()}
                     </TableCell>
                     <TableCell className="text-gray-600">
-                      {appointment.time}
+                      {new Date(appointment.date).toLocaleTimeString()}
                     </TableCell>
                     <TableCell>
                       <Badge

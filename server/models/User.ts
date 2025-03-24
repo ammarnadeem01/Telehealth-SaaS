@@ -95,9 +95,10 @@ const userSchema: Schema<IUser> = new Schema(
     },
     feePerSlot: {
       type: Number,
-      required: function () {
-        return this.role === "doctor";
-      },
+      // required: function () {
+      //   return this.role === "doctor";
+      // },
+      default: 100,
     },
   },
   {

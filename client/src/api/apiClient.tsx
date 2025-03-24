@@ -4,6 +4,7 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from "axios";
+import qs from "qs";
 
 interface ApiResponse<T = any> {
   data: T;
@@ -15,6 +16,7 @@ const apiClient: AxiosInstance = axios.create({
   baseURL: "http://localhost:3000/api/v1",
   timeout: 10000,
   headers: { "Content-Type": "application/json" },
+  paramsSerializer: (params) => qs.stringify(params, { arrayFormat: "comma" }),
 });
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {

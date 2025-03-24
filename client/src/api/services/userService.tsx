@@ -3,8 +3,14 @@ import api from ".././axiosConfig";
 import { ENDPOINTS, ApiResponse, UserDTO } from ".././endpoints";
 
 export const UserService = {
-  // getAllDoctors: () =>
-  //   api.get<ApiResponse<UserDTO[]>>(ENDPOINTS.USERS.DOCTOR_LIST),
+  getAllDoctors: (params?: {
+    search?: string;
+    // days?: string;
+    // duration?: number;
+  }) =>
+    api.get<ApiResponse<UserDTO[]>>(ENDPOINTS.USERS.GET_DOCTOR_LIST, {
+      params,
+    }),
   getById: (id: string) =>
     api.get<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id)),
   // create: (userData: Omit<UserDTO, "id" | "createdAt" | "updatedAt">) =>

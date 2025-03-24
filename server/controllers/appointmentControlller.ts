@@ -8,6 +8,7 @@ import { google } from "googleapis";
 import User, { IUser } from "@models/User";
 import { GaxiosResponse } from "gaxios";
 import { calendar_v3 } from "googleapis";
+import APIFeatures from "services/API_Features";
 
 async function addEventToGoogleCalendar(
   calendarToken: any,
@@ -34,9 +35,9 @@ async function addEventToGoogleCalendar(
 
 export const bookAppointment = async (req: Request, res: Response) => {
   try {
-    const { doctor, patient, date, type, duration } = req.body;
-
-    if (!doctor || !patient || !date || !type || !duration) {
+    const { doctor, patient, date, duration } = req.body;
+    console.log(req.body);
+    if (!doctor || !patient || !date || !duration) {
       res.status(400).json({ message: "Missing required fields." });
       return;
     }
@@ -144,14 +145,13 @@ export const bookAppointment = async (req: Request, res: Response) => {
       doctor,
       patient,
       date: appointmentStartUTC,
-      type,
       slots: duration / 30,
     });
     // Prepare event details for Google Calendar.
     // Note: Adjust the summary/description as needed.
     const patientEvent = {
       summary: `Appointment with Dr. ${doctorObj.name || "Doctor"}`,
-      description: `Appointment type: ${type}`,
+      // description: `Appointment type: ${type}`,
       start: {
         dateTime: appointmentStartUTC.toISOString(),
         timeZone: patientObj.timezone.toString(),
@@ -164,7 +164,7 @@ export const bookAppointment = async (req: Request, res: Response) => {
 
     const doctorEvent = {
       summary: `Appointment with ${patientObj.name || "Patient"}`,
-      description: `Appointment type: ${type}`,
+      // description: `Appointment type: ${type}`,
       start: {
         dateTime: appointmentStartUTC.toISOString(),
         timeZone: doctorObj.timezone.toString(),
@@ -372,6 +372,104 @@ export const getPatientAppointments = async (req: Request, res: Response) => {
     }
 
     // Verify patient exists and get timezone
+
+    const patient = await User.findById(userId);
+    if (!patient || patient.role !== "patient") {
+      res.status(404).json({ message: "Patient not found" });
+      return;
+    }
+
+    // Get all appointments for this patient
+    const query = Appointment.find({ patient: userId });
+    const queryString = { sort: "-createdAt", limit: "2" };
+
+    // Instantiate APIFeatures with the query and query string
+    const features = new APIFeatures(query, queryString).sort().paginate();
+
+    // Add populate methods for 'doctor' and 'patient'
+    features.getQuery().populate("doctor").populate("patient");
+
+    // Execute the query to get the latest two appointments
+    const appointments = await features.getQuery();
+
+    // Convert to patient's timezone
+    const timezone = patient.timezone || "UTC";
+    const converted = appointments.map((app: any) => {
+      const start = moment(app.date).tz(timezone as string);
+      const end = start.clone().add(app.slots * 30, "minutes");
+
+      return {
+        ...app.toObject(),
+        localStart: start.format(),
+        localEnd: end.format(),
+        timezone,
+        duration: app.slots * 30,
+      };
+    });
+
+    res.status(200).json(converted);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getUpcomingPatientAppointments = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      res.status(400).json({ message: "Missing userId in query" });
+      return;
+    }
+
+    // Verify patient exists and get timezone
+    const features = new APIFeatures(User.findById(userId), req.query).sort();
+    const patient = await User.findById(userId);
+    if (!patient || patient.role !== "patient") {
+      res.status(404).json({ message: "Patient not found" });
+      return;
+    }
+
+    // Get all appointments for this patient
+    const appointments = await Appointment.find({ patient: userId })
+      .populate("doctor")
+      .populate("patient");
+
+    // Convert to patient's timezone
+    const timezone = patient.timezone || "UTC";
+    const converted = appointments.map((app: any) => {
+      const start = moment(app.date).tz(timezone as string);
+      const end = start.clone().add(app.slots * 30, "minutes");
+
+      return {
+        ...app.toObject(),
+        localStart: start.format(),
+        localEnd: end.format(),
+        timezone,
+        duration: app.slots * 30,
+      };
+    });
+
+    res.status(200).json(converted);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const getAppointments = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.query;
+
+    if (!userId) {
+      res.status(400).json({ message: "Missing userId in query" });
+      return;
+    }
+
+    // Verify patient exists and get timezone
+    const features = new APIFeatures(User.findById(userId), req.query).sort();
     const patient = await User.findById(userId);
     if (!patient || patient.role !== "patient") {
       res.status(404).json({ message: "Patient not found" });

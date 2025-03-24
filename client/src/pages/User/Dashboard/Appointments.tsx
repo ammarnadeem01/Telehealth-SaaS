@@ -1,36 +1,32 @@
 // src/pages/dashboard/Appointments.tsx
+import { AppointmentService } from "@/api/services/appointmentService";
+import { useAuthStore } from "@/store/authStore";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const appointments = [
-  {
-    id: 1,
-    doctor: "Dr. Sarah Johnson",
-    date: "2024-03-20",
-    time: "10:00 AM",
-    type: "Video Consultation",
-    status: "Upcoming",
-  },
-  {
-    id: 2,
-    doctor: "Dr. Michael Chen",
-    date: "2024-03-18",
-    time: "2:30 PM",
-    type: "In-Person",
-    status: "Completed",
-  },
-];
-
 const AppointmentsUser = () => {
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const userId = useAuthStore((state: any) => state.userId);
+  async function setAppointmentsFunc() {
+    const response: any = await AppointmentService.patientAppointents({
+      userId,
+    });
+    console.log("data", response.data);
+    setAppointments(response.data);
+  }
+  useEffect(() => {
+    setAppointmentsFunc();
+  }, [userId]);
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Appointments</h1>
-        <Link
+        {/* <Link
           to="/dashboard/appointments/new"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
         >
           Book New Appointment
-        </Link>
+        </Link> */}
       </div>
 
       <div className="bg-white rounded-lg shadow">
@@ -60,12 +56,12 @@ const AppointmentsUser = () => {
                 <tr key={appointment.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="font-medium text-gray-900">
-                      {appointment.doctor}
+                      {appointment.doctor.name}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-gray-600">
-                      {appointment.date} at {appointment.time}
+                      {new Date(appointment.date).toLocaleString()}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

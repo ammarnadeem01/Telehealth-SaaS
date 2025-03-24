@@ -1,5 +1,11 @@
+import { UserService } from "@/api/services/userService";
 import DoctorCard from "@/components/doctor/DoctorCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface TimeSlot {
+  startTime: string;
+  endTime: string;
+}
 
 interface Doctor {
   id: string;
@@ -7,92 +13,70 @@ interface Doctor {
   specialty: string;
   experience: number;
   rating: number;
-  availability: string;
+  availableSlots: Record<string, TimeSlot[]>; // Changed to match schema
   image: string;
   languages: string[];
   consultationFee: number;
 }
 
+const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
+
 export default function DoctorList() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSpecialty, setSelectedSpecialty] = useState("");
-  const [selectedAvailability, setSelectedAvailability] = useState("");
-  const [minRating, setMinRating] = useState(0);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [durationSlots, setDurationSlots] = useState<number>(0);
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const doctors = [
-    {
-      id: "1",
-      name: "Dr. Sarah Johnson",
-      specialty: "Cardiology",
-      experience: 12,
-      rating: 4.9,
-      availability: "today",
-      image: "https://placehold.co/150x150.png",
-      languages: ["English", "Spanish"],
-      consultationFee: 150,
-    },
-    {
-      id: "2",
-      name: "Dr. Michael Smith",
-      specialty: "Dermatology",
-      experience: 8,
-      rating: 4.7,
-      availability: "tomorrow",
-      image: "https://placehold.co/150x150.png",
-      languages: ["English"],
-      consultationFee: 120,
-    },
-    {
-      id: "3",
-      name: "Dr. Emily Brown",
-      specialty: "Pediatrics",
-      experience: 10,
-      rating: 4.8,
-      availability: "today",
-      image: "https://placehold.co/150x150.png",
-      languages: ["English", "French"],
-      consultationFee: 130,
-    },
-    {
-      id: "4",
-      name: "Dr. David Wilson",
-      specialty: "Neurology",
-      experience: 15,
-      rating: 4.6,
-      availability: "next week",
-      image: "https://placehold.co/150x150.png",
-      languages: ["English", "German"],
-      consultationFee: 180,
-    },
-    {
-      id: "5",
-      name: "Dr. Olivia Martinez",
-      specialty: "Orthopedics",
-      experience: 9,
-      rating: 4.5,
-      availability: "today",
-      image: "https://placehold.co/150x150.png",
-      languages: ["English", "Spanish"],
-      consultationFee: 160,
-    },
-  ];
-  const specialties = ["Cardiology", "Dermatology", "Pediatrics", "Neurology"];
-  const availabilityOptions = ["today", "tomorrow", "this-week"];
+  // Fetch doctors from API
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      setIsLoading(true);
+      try {
+        const queryParams = new URLSearchParams();
+        if (searchTerm) queryParams.append("search", searchTerm);
+        if (selectedDays.length > 0)
+          queryParams.append("days", selectedDays.join(","));
+        if (durationSlots > 0)
+          queryParams.append("duration", durationSlots.toString());
 
-  const filteredDoctors = doctors.filter((doctor) => {
-    const matchesSearch =
-      doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesSpecialty =
-      !selectedSpecialty || doctor.specialty === selectedSpecialty;
-    const matchesAvailability =
-      !selectedAvailability || doctor.availability === selectedAvailability;
-    const matchesRating = doctor.rating >= minRating;
+        const doctors: any = await UserService.getAllDoctors({
+          search: searchTerm,
+          // days: selectedDays.join(","),
+          // duration: durationSlots,
+        });
+        console.log(doctors.data.data.doctors);
+        setDoctors(doctors.data.data.doctors);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      }
+      setIsLoading(false);
+    };
 
-    return (
-      matchesSearch && matchesSpecialty && matchesAvailability && matchesRating
-    );
-  });
+    const debounceTimer = setTimeout(() => {
+      fetchDoctors();
+    }, 300);
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm, selectedDays, durationSlots]);
+
+  const handleDaySelect = (day: string) => {
+    if (!selectedDays.includes(day)) {
+      setSelectedDays([...selectedDays, day]);
+    }
+  };
+
+  const removeDay = (dayToRemove: string) => {
+    setSelectedDays(selectedDays.filter((day) => day !== dayToRemove));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -103,7 +87,8 @@ export default function DoctorList() {
 
         {/* Filters Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Search Input */}
             <input
               type="text"
               placeholder="Search doctors..."
@@ -111,46 +96,81 @@ export default function DoctorList() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+
+            {/* Day Selector */}
+            <div className="relative">
+              <select
+                className="p-2 border rounded-md w-full"
+                onChange={(e) => handleDaySelect(e.target.value)}
+                value=""
+              >
+                <option value="">Select days</option>
+                {daysOfWeek.map((day) => (
+                  <option
+                    key={day}
+                    value={day}
+                    disabled={selectedDays.includes(day)}
+                  >
+                    {day}
+                  </option>
+                ))}
+              </select>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {selectedDays.map((day) => (
+                  <span
+                    key={day}
+                    className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded flex items-center"
+                  >
+                    {day}
+                    <button
+                      type="button"
+                      className="ml-1.5 text-blue-600 hover:text-blue-800"
+                      onClick={() => removeDay(day)}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Duration Selector */}
             <select
               className="p-2 border rounded-md"
-              value={selectedSpecialty}
-              onChange={(e) => setSelectedSpecialty(e.target.value)}
+              value={durationSlots}
+              onChange={(e) => setDurationSlots(Number(e.target.value))}
             >
-              <option value="">All Specialties</option>
-              {specialties.map((specialty) => (
-                <option key={specialty} value={specialty}>
-                  {specialty}
-                </option>
-              ))}
-            </select>
-            <select
-              className="p-2 border rounded-md"
-              value={selectedAvailability}
-              onChange={(e) => setSelectedAvailability(e.target.value)}
-            >
-              <option value="">Any Availability</option>
-              <option value="today">Available Today</option>
-              <option value="tomorrow">Available Tomorrow</option>
-              <option value="this-week">This Week</option>
-            </select>
-            <select
-              className="p-2 border rounded-md"
-              value={minRating}
-              onChange={(e) => setMinRating(Number(e.target.value))}
-            >
-              <option value={0}>All Ratings</option>
-              <option value={4}>4+ Stars</option>
-              <option value={4.5}>4.5+ Stars</option>
+              <option value={0}>Any duration</option>
+              <option value={1}>30 minutes</option>
+              <option value={2}>1 hour</option>
+              <option value={3}>1.5 hours</option>
+              <option value={4}>2 hours</option>
             </select>
           </div>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-4">Loading doctors...</div>
+        )}
+
         {/* Doctors Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDoctors &&
-            filteredDoctors.map((doctor) => <DoctorCard doctor={doctor} />)}
+          {doctors.map((doctor) => {
+            console.log("2", doctor);
+            return <DoctorCard doctor={doctor} durationSlots={durationSlots} />;
+          })}
         </div>
       </div>
     </div>
   );
 }
+
+// Helper function to format time
+const formatTime = (minutes: number) => {
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 || 12;
+  return `${displayHours}:${mins.toString().padStart(2, "0")} ${period}`;
+};

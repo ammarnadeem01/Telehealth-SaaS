@@ -59,6 +59,7 @@ const appointmentSchema: Schema<IAppointment> = new Schema(
       type: String,
       enum: Object.values(AppointmentType),
       required: true,
+      default: AppointmentType.VIDEO,
     },
     notes: {
       type: String,
