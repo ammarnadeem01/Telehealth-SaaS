@@ -48,6 +48,7 @@ const healthMetrics = [
 ];
 export default function UserDashboard() {
   const [upcomingAppointments, setUpcomingAppointments] = useState<any[]>([]);
+  const [recentMessages, setRecentMessages] = useState<any[]>([]);
   const userId = useAuthStore((state: any) => state.userId);
   async function setUpcomingAppointmentsFunc() {
     const response: any = await AppointmentService.upcomingAppointents({
@@ -56,8 +57,16 @@ export default function UserDashboard() {
     console.log("data", response.data);
     setUpcomingAppointments(response.data);
   }
+  async function setRecentMessagesFunc() {
+    const response: any = await AppointmentService.upcomingAppointents({
+      userId,
+    });
+    console.log("data", response.data);
+    setUpcomingAppointments(response.data);
+  }
   useEffect(() => {
     setUpcomingAppointmentsFunc();
+    setRecentMessagesFunc();
   }, [userId]);
   return (
     <div className="space-y-4 p-4 bg-gray-50 min-h-screen">
@@ -94,7 +103,7 @@ export default function UserDashboard() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-1">
         {/* Upcoming Appointments */}
         <Card className="lg:col-span-2 border-gray-200 bg-white">
           <CardHeader className="border-b border-gray-200">
@@ -123,7 +132,7 @@ export default function UserDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {upcomingAppointments.map((appointment) => (
+                {upcomingAppointments.map((appointment: any) => (
                   <TableRow
                     key={appointment.id}
                     className="hover:bg-gray-50 border-gray-200"
@@ -157,7 +166,7 @@ export default function UserDashboard() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="border-gray-200 bg-white">
+        {/* <Card className="border-gray-200 bg-white">
           <CardHeader className="border-b border-gray-200">
             <CardTitle className="flex items-center gap-2 text-gray-800">
               <Stethoscope className="h-5 w-5 text-blue-600" />
@@ -186,7 +195,7 @@ export default function UserDashboard() {
               <Link to="/user/symptom-check">AI Symptom Check</Link>
             </Button>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Recent Messages */}
         <Card className="lg:col-span-3 border-gray-200 bg-white">
@@ -201,7 +210,7 @@ export default function UserDashboard() {
                 variant="ghost"
                 className="text-blue-600 hover:bg-blue-50"
               >
-                <Link to="/dashboard/messages">View All</Link>
+                <Link to="/user/messages">View All</Link>
               </Button>
             </div>
           </CardHeader>

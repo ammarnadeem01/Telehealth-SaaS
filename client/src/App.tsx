@@ -48,6 +48,8 @@ import DoctorList from "./pages/User/Doctors";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PageNotFound from "./pages/User/PageNotFound";
+import { ToastContainer } from "react-toastify";
+import DoctorDetails from "./components/doctor/DoctorDetails";
 
 function App() {
   const location = useLocation();
@@ -62,11 +64,24 @@ function App() {
   return (
     <>
       {hideHeaderFooter && <Navbar />}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<AboutUs />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/doctorlist" element={<DoctorList />} />
+        <Route path="/doctor/:id" element={<DoctorDetails />} />
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

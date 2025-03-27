@@ -27,6 +27,7 @@ const Login = () => {
   });
 
   const handleLogin = (data: any, token: string) => {
+    console.log("data in handlelogin", token);
     useAuthStore.getState().login({
       userId: data._id,
       role: data.role,
@@ -43,10 +44,10 @@ const Login = () => {
     try {
       // Use the login method from our UserService
       const response: any = await UserService.login(formData);
-      console.log(response);
+      console.log("hey", response);
       // Assumes the response contains both user data and a token
-      if (response?.data && response.token) {
-        handleLogin(response.data, response.token);
+      if (response.data.data && response.data.token) {
+        handleLogin(response.data.data, response.data.token);
         navigate("/profile");
       }
     } catch (err: any) {

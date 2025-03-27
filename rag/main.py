@@ -3,9 +3,17 @@ from pydantic import BaseModel
 from pipeline import get_rag_pipeline
 import pprint
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class SymptomQuery(BaseModel):
     user_input: str
@@ -20,13 +28,28 @@ def home():
 async def analyze_symptoms(query: SymptomQuery):
     try:
         if query.use_case == "symptom_retriever":
-            prompt_template = """
-            Retrieve relevant medical context based on symptoms:
-            Patient Input: {question}
-            Medical History: {medical_history}
-            Context: {context}
-            Return a list of relevant medical documents.
+           prompt_template = """
+            You are a helpful AI assistant that provides medical insights based on user symptoms.  
+            Make your response **clear and understandable** for users.  
+            
+            Patient's Input: "{question}"  
+            Medical History: "{medical_history}"  
+            
+            🔹 **Analysis:**  
+            - If the patient's input is too general, politely ask for more details.  
+            - If symptoms are mentioned, summarize them in simple terms.  
+            
+            🔹 **Possible Causes & Insights:**  
+            - Based on available information, list possible conditions or symptoms.  
+            - Keep it simple and easy to understand.  
+            
+            🔹 **Next Steps:**  
+            - Suggest if they should consult a doctor.  
+            - Offer general advice (e.g., rest, hydration).  
+            
+            Avoid mentioning "documents" or "queries." Instead, provide helpful and relevant insights in a conversational tone.
             """
+
         elif query.use_case == "diagnosis":
             prompt_template = """
             Analyze symptoms with medical history:

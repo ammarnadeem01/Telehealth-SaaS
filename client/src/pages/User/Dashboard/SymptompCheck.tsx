@@ -1,7 +1,11 @@
 // src/pages/dashboard/SymptomCheck.tsx
+// import { useAuthStore } from "@/store/authStore";
+import axios from "axios";
 import { useState } from "react";
+import Markdown from "react-markdown";
 
 const SymptomCheck = () => {
+  // const { token } = useAuthStore((state) => state.token);
   const [messages, setMessages] = useState([
     {
       text: "Hello! I'm HealthBot. What symptoms are you experiencing?",
@@ -16,7 +20,25 @@ const SymptomCheck = () => {
 
     // Add user message
     setMessages((prev) => [...prev, { text: inputText, isBot: false }]);
-
+    axios
+      .post("http://localhost:8000/analyze-symptoms", {
+        user_input: inputText,
+        use_case: "symptom_retriever",
+        medical_history: JSON.stringify(messages),
+      })
+      .then((data: any) => {
+        console.log(data.data.response);
+        setMessages((prev) => [
+          ...prev,
+          {
+            text: data.data.response,
+            isBot: true,
+          },
+        ]);
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
     // Simulate bot response
     setTimeout(() => {
       setMessages((prev) => [
@@ -50,7 +72,7 @@ const SymptomCheck = () => {
                     : "bg-blue-600 text-white"
                 }`}
               >
-                {message.text}
+                <Markdown>{message.text}</Markdown>
               </div>
             </div>
           ))}

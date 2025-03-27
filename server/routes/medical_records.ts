@@ -14,13 +14,11 @@ import { upload } from "../utils/fileStorage";
 const router = express.Router();
 
 // Routes
-router
-  .route("/create-medical-record")
-  .post(
-    upload.single("file"),
-    restrict(["admin", "doctor", "patient"]),
-    createMedicalRecord
-  );
+router.route("/create-medical-record").post(
+  upload.single("filePath"),
+  // restrict(["admin", "doctor", "patient"]),
+  createMedicalRecord
+);
 router.get("/patient/:patientId", getPatientRecords);
 router.get("/:id", getSingleRecord);
 router.get("/:id/download", downloadReport);

@@ -6,10 +6,12 @@ import fs from "fs";
 
 export async function createMedicalRecord(req: Request, res: Response) {
   try {
-    const { patientId, title, description } = req.body;
+    console.log("req", req);
+    const { doctorId, patientId, title, description } = req.body;
+    console.log("req.file", req.file);
 
     if (!patientId || !title || !description || !req.file) {
-      res.status(400).json({ error: "Missing required fields" });
+      res.status(400).json({ error: "Missing required fields yayy" });
       return;
     }
     if (!isValidObjectId(patientId)) {
@@ -22,7 +24,7 @@ export async function createMedicalRecord(req: Request, res: Response) {
       return;
     }
     const newRecord = new MedicalRecord({
-      userId: req.body.id,
+      doctorId,
       patientId,
       title,
       description,
@@ -30,7 +32,7 @@ export async function createMedicalRecord(req: Request, res: Response) {
       fileName: req.file.originalname,
     });
     await newRecord.save();
-    await newRecord.populate(["userId", "patientId"]);
+    await newRecord.populate(["doctorId", "patientId"]);
     res.status(201).json({
       status: "Success",
       data: newRecord,
@@ -50,7 +52,7 @@ export async function getPatientRecords(req: Request, res: Response) {
     }
 
     const records = await MedicalRecord.find({ patientId })
-      .populate("userId", "name role")
+      .populate("doctorId", "name role")
       .populate("patientId", "name email");
 
     res.json(records);

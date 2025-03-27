@@ -1,7 +1,9 @@
 import { AppointmentService } from "@/api/services/appointmentService";
 import { useAuthStore } from "@/store/authStore";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function DoctorCard({ doctor, durationSlots }: any) {
+  const notify = (str: string) => toast(str);
   const formatTime = (timeStr: string) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     const period = hours >= 12 ? "PM" : "AM";
@@ -22,12 +24,20 @@ function DoctorCard({ doctor, durationSlots }: any) {
         duration: durationSlots * 30,
       });
       console.log("appointment", response);
-    } catch (error) {
+      notify("Appointment Bookeds!");
+    } catch (error: any) {
+      notify(error.response.data.message);
       console.log("error in doc caard", error);
     }
   };
+  const nav = useNavigate();
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
+    <div
+      onClick={() => {
+        nav(`/doctor/${doctor._id}`);
+      }}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full"
+    >
       <img
         src={doctor.profilePicture}
         alt={doctor.name}
