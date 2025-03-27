@@ -19,6 +19,12 @@ export interface IUser {
   refreshToken: string | null;
   createdAt: Date;
   updatedAt: Date;
+  resetToken: string;
+  timezone: String;
+  googleCalendarToken?: string;
+  googleRefreshToken?: string;
+  googleCalendarId?: string;
+  feePerSlot: Number;
   comparePasswords: (passwd: string, comparePasswd: string) => {};
 }
 const userSchema: Schema<IUser> = new Schema(
@@ -76,19 +82,36 @@ const userSchema: Schema<IUser> = new Schema(
       type: String,
       select: false,
     },
+    resetToken: {
+      type: String,
+    },
+    timezone: {
+      type: String,
+
+      default: "UTC",
+    },
+    googleCalendarToken: {
+      type: String,
+    },
+    feePerSlot: {
+      type: Number,
+      // required: function () {
+      //   return this.role === "doctor";
+      // },
+      default: 100,
+    },
   },
   {
     timestamps: true,
   }
 );
-userSchema.pre("find", function (next) {
-  this.find({ active: true });
-  next();
-});
+
 userSchema.pre("save", async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  this.confirmPassword = undefined;
-  next();
+  if (this.confirmPassword) {
+    this.password = await bcrypt.hash(this.password, 12);
+    this.confirmPassword = undefined;
+    next();
+  }
 });
 userSchema.methods.comparePasswords = async function (
   passwd: string,

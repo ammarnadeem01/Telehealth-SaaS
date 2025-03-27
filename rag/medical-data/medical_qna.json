@@ -1,0 +1,107 @@
+[
+  {
+    "question": "What are the symptoms of pneumonia?",
+    "answer": "Common symptoms include fever, cough with phlegm, chest pain, and difficulty breathing.",
+    "source": "CDC"
+  },
+  {
+    "question": "How is diabetes managed?",
+    "answer": "Diabetes is managed through diet, exercise, medication such as insulin or metformin, and regular blood sugar monitoring.",
+    "source": ["WHO", "American Diabetes Association"]
+  },
+  {
+    "question": "What are the symptoms of influenza?",
+    "answer": "Common symptoms include fever, cough, and body aches.",
+    "source": "CDC"
+  },
+  {
+    "question": "What causes high blood pressure?",
+    "answer": "High blood pressure can be caused by obesity, stress, and genetic factors.",
+    "source": "Mayo Clinic"
+  },
+  {
+    "question": "How is asthma treated?",
+    "answer": "Asthma is typically treated with inhalers and sometimes steroids.",
+    "source": "American Lung Association"
+  },
+  {
+    "question": "What is chemotherapy used for?",
+    "answer": "Chemotherapy is primarily used for treating cancer.",
+    "source": "National Cancer Institute"
+  },
+  {
+    "question": "What are common side effects of ibuprofen?",
+    "answer": "Common side effects include nausea, dizziness, and stomach upset.",
+    "source": "FDA"
+  },
+  {
+    "question": "How is COVID-19 diagnosed?",
+    "answer": "COVID-19 is diagnosed through PCR tests and rapid antigen tests.",
+    "source": "WHO"
+  },
+  {
+    "question": "What is the role of insulin in diabetes?",
+    "answer": "Insulin helps regulate blood sugar levels.",
+    "source": "Endocrine Society"
+  },
+  {
+    "question": "What are the risks of radiation therapy?",
+    "answer": "Risks include skin irritation, fatigue, and possible damage to healthy tissues.",
+    "source": "Cancer Research UK"
+  },
+  {
+    "question": "What should be done in case of a suspected heart attack?",
+    "answer": "Seek immediate medical attention and call emergency services.",
+    "source": "American Heart Association"
+  },
+  {
+    "question": "What is the purpose of insulin therapy?",
+    "answer": "It is used to control blood sugar levels in diabetic patients.",
+    "source": "American Diabetes Association"
+  },
+  {
+    "question": "How do beta blockers work?",
+    "answer": "They reduce the heart rate and lower blood pressure.",
+    "source": "Mayo Clinic"
+  },
+  {
+    "question": "What are the benefits of physical therapy?",
+    "answer": "Physical therapy aids in recovery and improves mobility.",
+    "source": "American Physical Therapy Association"
+  },
+  {
+    "question": "How is osteoporosis managed?",
+    "answer": "Management includes calcium supplements, vitamin D, and weight-bearing exercise.",
+    "source": "National Osteoporosis Foundation"
+  },
+  {
+    "question": "What are common contraindications for aspirin?",
+    "answer": "Aspirin is contraindicated in patients with ulcers or bleeding disorders.",
+    "source": "FDA"
+  },
+  {
+    "question": "What's the first-line antibiotic for community-acquired pneumonia?",
+    "answer": "Macrolides like azithromycin or respiratory fluoroquinolones.",
+    "source": "ATS/IDSA Guidelines 2019"
+  },
+  {
+    "question": "How is Crohn's disease differentiated from ulcerative colitis?",
+    "answer": "Transmural inflammation vs mucosal-only, skip lesions, rectal sparing in Crohn's.",
+    "source": "Harrison's Gastroenterology 2021"
+  },
+  {
+    "question": "What's the mechanism of action of ACE inhibitors?",
+    "answer": "Block conversion of angiotensin I to II, reducing vasoconstriction.",
+    "source": "Goodman & Gilman's Pharmacology"
+  },
+  {
+    "question": "When should thrombolytics be administered in stroke?",
+    "answer": "Within 4.5 hours of symptom onset with confirmed ischemic stroke.",
+    "source": "AHA/ASA Stroke Guidelines 2023"
+  },
+  {
+    "question": "What are the diagnostic criteria for rheumatoid arthritis?",
+    "answer": "≥6 points from: joint involvement, serology, acute phase reactants, duration ≥6 weeks.",
+    "source": "ACR/EULAR Criteria 2010"
+  }
+]

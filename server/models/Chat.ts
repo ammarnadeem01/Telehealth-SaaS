@@ -1,20 +1,24 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface IChat {
-  participants: mongoose.Types.ObjectId[];
+  doctor: mongoose.Types.ObjectId;
+  patient: mongoose.Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
 
 const chatSchema: Schema<IChat> = new Schema(
   {
-    participants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-    ],
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    patient: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,

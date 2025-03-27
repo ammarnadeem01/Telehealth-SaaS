@@ -1,0 +1,126 @@
+[
+  {
+    "drug_name": "Aspirin",
+    "uses": ["Pain relief", "Blood thinner", "Anti-inflammatory"],
+    "side_effects": ["Stomach ulcers", "Bleeding", "Stomach upset"],
+    "contraindications": ["Peptic ulcer", "Hemophilia", "Bleeding disorders"]
+  },
+  {
+    "drug_name": "Ibuprofen",
+    "uses": ["Pain relief", "Fever reduction"],
+    "side_effects": ["Nausea", "Dizziness"],
+    "contraindications": ["Kidney disease", "Asthma"]
+  },
+  {
+    "drug_name": "Paracetamol",
+    "uses": ["Fever", "Pain relief"],
+    "side_effects": ["Liver damage (in high doses)"],
+    "contraindications": ["Liver disease", "Alcoholism"]
+  },
+  {
+    "drug_name": "Metformin",
+    "uses": ["Blood sugar control"],
+    "side_effects": ["Nausea", "Diarrhea"],
+    "contraindications": ["Kidney dysfunction"]
+  },
+  {
+    "drug_name": "Lisinopril",
+    "uses": ["Lower blood pressure"],
+    "side_effects": ["Cough", "Dizziness"],
+    "contraindications": ["Pregnancy", "Kidney disease"]
+  },
+  {
+    "drug_name": "Atorvastatin",
+    "uses": [
+      "Cholesterol reduction",
+      "Hyperlipidemia",
+      "Cardiovascular prevention"
+    ],
+    "side_effects": [
+      "Muscle pain",
+      "Myalgia",
+      "Liver enzyme elevation",
+      "GI upset"
+    ],
+    "contraindications": [
+      "Active liver disease",
+      "Pregnancy",
+      "Cyclosporine use"
+    ]
+  },
+  {
+    "drug_name": "Amoxicillin",
+    "uses": ["Bacterial infection treatment"],
+    "side_effects": ["Allergic reactions"],
+    "contraindications": ["Penicillin allergy"]
+  },
+  {
+    "drug_name": "Omeprazole",
+    "uses": [
+      "Reduce stomach acid",
+      "GERD",
+      "Peptic ulcer",
+      "Zollinger-Ellison"
+    ],
+    "side_effects": ["Headache", "B12 deficiency", "C.diff risk"],
+    "contraindications": [
+      "Liver disease",
+      "Concurrent clopidogrel",
+      "Hypomagnesemia"
+    ]
+  },
+  {
+    "drug_name": "Warfarin",
+    "uses": ["Blood thinning", "Atrial fibrillation", "DVT prophylaxis"],
+    "side_effects": ["Bleeding", "Ecchymosis", "Necrosis"],
+    "contraindications": [
+      "Pregnancy",
+      "Liver disease",
+      "Recent surgery",
+      "Hemophilia",
+      "Peptic ulcer"
+    ]
+  },
+  {
+    "drug_name": "Albuterol",
+    "uses": ["Bronchodilation"],
+    "side_effects": ["Tremor", "Nervousness"],
+    "contraindications": ["Heart conditions"]
+  },
+  {
+    "drug_name": "Simvastatin",
+    "uses": ["Cholesterol reduction"],
+    "side_effects": ["Muscle pain", "Digestive issues"],
+    "contraindications": ["Liver disease"]
+  },
+  {
+    "drug_name": "Clopidogrel",
+    "uses": ["Prevent blood clots"],
+    "side_effects": ["Bleeding", "Bruising"],
+    "contraindications": ["Bleeding disorders"]
+  },
+  {
+    "drug_name": "Prednisone",
+    "uses": ["Reduce inflammation"],
+    "side_effects": ["Weight gain", "Mood swings"],
+    "contraindications": ["Diabetes", "Infections"]
+  },
+  {
+    "drug_name": "Metoprolol",
+    "uses": ["Heart rate control", "Hypertension", "Angina", "Heart failure"],
+    "side_effects": ["Fatigue", "Dizziness", "Bradycardia", "Bronchospasm"],
+    "contraindications": ["Severe bradycardia", "Heart block", "Asthma"]
+  },
+  {
+    "drug_name": "Ciprofloxacin",
+    "uses": ["Treat bacterial infections"],
+    "side_effects": ["Nausea", "Tendon rupture"],
+    "contraindications": ["Pregnancy", "Tendon disorders"]
+  },
+  {
+    "drug_name": "Sertraline",
+    "uses": ["Depression", "OCD", "PTSD"],
+    "side_effects": ["Nausea", "Insomnia", "Sexual dysfunction"],
+    "contraindications": ["MAOI use", "Bipolar disorder", "Seizure disorders"]
+  }
+]

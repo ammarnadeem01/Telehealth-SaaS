@@ -6,6 +6,7 @@ enum MessageType {
 interface IMessage {
   chat: mongoose.Schema.Types.ObjectId;
   sender: mongoose.Schema.Types.ObjectId;
+  receiver: mongoose.Schema.Types.ObjectId;
   isRead: boolean;
   content: string;
   sentAt: Date;
@@ -19,6 +20,11 @@ const messageSchema: Schema<IMessage> = new Schema(
       required: true,
     },
     sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    receiver: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuthStore } from "@store/authStore";
+import { useAuthStore } from "@/store/authStore";
 
 const Profile = () => {
-  const avatar = useAuthStore((state) => state.avatar);
+  let avatar: string | null = useAuthStore((state) => state.avatar);
   const name = useAuthStore((state) => state.name);
   const email = useAuthStore((state) => state.email);
   const userId = useAuthStore((state) => state.userId);
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const setAvatar = useAuthStore((state) => state.setAvatar);
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(undefined);
   const [uploading, setUploading] = useState<boolean>(false);
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,8 +29,10 @@ const Profile = () => {
         //   headers: { "Content-Type": "multipart/form-data" },
         // }
       );
-      console.log(data);
-      // setAvatarUrl(data.imageUrl);
+      console.log(data.data);
+      setAvatarUrl(data.data);
+      setAvatar(data.data);
+      avatar = null;
     } catch (error) {
       console.error("Upload failed", error);
     } finally {
@@ -56,6 +59,7 @@ const Profile = () => {
       console.error("Error updating profile:", error);
     }
   };
+  useEffect(() => {}, [avatarUrl]);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md relative">
