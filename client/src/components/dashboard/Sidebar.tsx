@@ -33,11 +33,11 @@ export function Sidebar() {
           label: "AI Symptom Check",
           href: "/user/symptom-check",
         },
-        {
-          icon: FileText,
-          label: "Medical History",
-          href: "/user/medical-history",
-        },
+        // {
+        //   icon: FileText,
+        //   label: "Medical History",
+        //   href: "/user/medical-history",
+        // },
         {
           icon: FileText,
           label: "Health Records",

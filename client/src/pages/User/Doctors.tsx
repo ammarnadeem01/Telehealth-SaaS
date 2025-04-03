@@ -31,8 +31,8 @@ const daysOfWeek = [
 
 export default function DoctorList() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [durationSlots, setDurationSlots] = useState<number>(0);
+  // const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  // const [durationSlots, setDurationSlots] = useState<number>(0);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,10 +43,10 @@ export default function DoctorList() {
       try {
         const queryParams = new URLSearchParams();
         if (searchTerm) queryParams.append("search", searchTerm);
-        if (selectedDays.length > 0)
-          queryParams.append("days", selectedDays.join(","));
-        if (durationSlots > 0)
-          queryParams.append("duration", durationSlots.toString());
+        // if (selectedDays.length > 0)
+        //   queryParams.append("days", selectedDays.join(","));
+        // if (durationSlots > 0)
+        //   queryParams.append("duration", durationSlots.toString());
 
         const doctors: any = await UserService.getAllDoctors({
           search: searchTerm,
@@ -66,17 +66,17 @@ export default function DoctorList() {
     }, 300);
 
     return () => clearTimeout(debounceTimer);
-  }, [searchTerm, selectedDays, durationSlots]);
+  }, [searchTerm]);
 
-  const handleDaySelect = (day: string) => {
-    if (!selectedDays.includes(day)) {
-      setSelectedDays([...selectedDays, day]);
-    }
-  };
+  // const handleDaySelect = (day: string) => {
+  //   if (!selectedDays.includes(day)) {
+  //     setSelectedDays([...selectedDays, day]);
+  //   }
+  // };
 
-  const removeDay = (dayToRemove: string) => {
-    setSelectedDays(selectedDays.filter((day) => day !== dayToRemove));
-  };
+  // const removeDay = (dayToRemove: string) => {
+  //   setSelectedDays(selectedDays.filter((day) => day !== dayToRemove));
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -87,7 +87,7 @@ export default function DoctorList() {
 
         {/* Filters Section */}
         <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1">
             {/* Search Input */}
             <input
               type="text"
@@ -98,7 +98,7 @@ export default function DoctorList() {
             />
 
             {/* Day Selector */}
-            <div className="relative">
+            {/* <div className="relative">
               <select
                 className="p-2 border rounded-md w-full"
                 onChange={(e) => handleDaySelect(e.target.value)}
@@ -131,11 +131,11 @@ export default function DoctorList() {
                     </button>
                   </span>
                 ))}
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
 
             {/* Duration Selector */}
-            <select
+            {/* <select
               className="p-2 border rounded-md"
               value={durationSlots}
               onChange={(e) => setDurationSlots(Number(e.target.value))}
@@ -145,7 +145,7 @@ export default function DoctorList() {
               <option value={2}>1 hour</option>
               <option value={3}>1.5 hours</option>
               <option value={4}>2 hours</option>
-            </select>
+            </select> */}
           </div>
         </div>
 
@@ -158,7 +158,7 @@ export default function DoctorList() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctors.map((doctor) => {
             console.log("2", doctor);
-            return <DoctorCard doctor={doctor} durationSlots={durationSlots} />;
+            return <DoctorCard doctor={doctor} />;
           })}
         </div>
       </div>
