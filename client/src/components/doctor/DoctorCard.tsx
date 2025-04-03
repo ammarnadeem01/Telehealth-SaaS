@@ -2,7 +2,7 @@ import { AppointmentService } from "@/api/services/appointmentService";
 import { useAuthStore } from "@/store/authStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-function DoctorCard({ doctor, durationSlots }: any) {
+function DoctorCard({ doctor }: any) {
   const notify = (str: string) => toast(str);
   const formatTime = (timeStr: string) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
@@ -12,32 +12,26 @@ function DoctorCard({ doctor, durationSlots }: any) {
     return `${displayHours}:${displayMinutes} ${period}`;
   };
   const userId = useAuthStore((state: any) => state.userId);
-  const bookAppointment = async () => {
-    try {
-      console.log(doctor._id, userId, new Date(), durationSlots);
-      const response: any = await AppointmentService.bookAppointment({
-        doctor: doctor._id,
-        patient: userId,
-        date: new Date(
-          new Date().setDate(new Date().getDate() + 1) - 2 * 60 * 60 * 1000
-        ),
-        duration: durationSlots * 30,
-      });
-      console.log("appointment", response);
-      notify("Appointment Bookeds!");
-    } catch (error: any) {
-      notify(error.response.data.message);
-      console.log("error in doc caard", error);
-    }
-  };
+  // const bookAppointment = async () => {
+  //   try {
+  //     const response: any = await AppointmentService.bookAppointment({
+  //       doctor: doctor._id,
+  //       patient: userId,
+  //       date: new Date(
+  //         new Date().setDate(new Date().getDate() + 1) - 2 * 60 * 60 * 1000
+  //       ),
+  //       duration: durationSlots * 30,
+  //     });
+  //     console.log("appointment", response);
+  //     notify("Appointment Bookeds!");
+  //   } catch (error: any) {
+  //     notify(error.response.data.message);
+  //     console.log("error in doc caard", error);
+  //   }
+  // };
   const nav = useNavigate();
   return (
-    <div
-      onClick={() => {
-        nav(`/doctor/${doctor._id}`);
-      }}
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full"
-    >
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
       <img
         src={doctor.profilePicture}
         alt={doctor.name}
@@ -92,12 +86,15 @@ function DoctorCard({ doctor, durationSlots }: any) {
             ${doctor.feePerSlot}/session
           </p>
           <button
+            // onClick={() => {
+            //   bookAppointment();
+            // }}
             onClick={() => {
-              bookAppointment();
+              nav(`/doctor/${doctor._id}`);
             }}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Book Now
+            View Full Profile
           </button>
         </div>
       </div>

@@ -43,33 +43,53 @@ export const registerUser = async (req: Request, res: Response) => {
       phoneNumber,
       address,
       timezone,
+      about,
+      specialization,
     }: IUser = req.body;
-    console.log("req.body");
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !role ||
-      !phoneNumber ||
-      !address ||
-      !timezone
-    ) {
+
+    // Common required fields for all roles
+    const commonRequiredFields = [
+      name,
+      email,
+      password,
+      confirmPassword,
+      role,
+      phoneNumber,
+      address,
+      timezone,
+    ];
+
+    // Check for common required fields
+    if (commonRequiredFields.some((field) => !field)) {
       res.status(400).json({
         status: "Fail",
-        message: "Missing Required Fields.",
+        message: "Missing required fields",
       });
       return;
     }
+
+    // Additional checks for doctors
+    if (role === "doctor") {
+      if (!about || !specialization) {
+        res.status(400).json({
+          status: "Fail",
+          message: "Doctors require about and specialization fields",
+        });
+        return;
+      }
+    }
+
     const alreadyExist = await User.findOne({ email });
     if (alreadyExist) {
       res.status(400).json({
         status: "Fail",
-        message: "User already exists.",
+        message: "User already exists",
       });
       return;
     }
-    const user = await User.create({
+
+    // Create user object based on role
+    const userData: any = {
       name,
       email,
       password,
@@ -79,40 +99,76 @@ export const registerUser = async (req: Request, res: Response) => {
       address,
       timezone,
       profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${name}`,
-    });
+    };
+
+    // Add doctor-specific fields
+    if (role === "doctor") {
+      userData.about = about;
+      userData.specialization = specialization;
+      userData.feePerSlot = req.body.feePerSlot || 100; // Default fee if not provided
+    }
+
+    const user = await User.create(userData);
+
     if (!user) {
-      res.status(404).json({
+      res.status(500).json({
         status: "Fail",
-        message: "User not created. Please try again.",
+        message: "User creation failed",
       });
       return;
     }
+
+    // Generate tokens
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
+
+    // Update user with refresh token
     user.refreshToken = refreshToken;
     await user.save();
-    res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
-    res.status(200).json({
+
+    // Set cookie and send response
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    res.status(201).json({
       status: "Success",
       token: accessToken,
       data: user,
     });
-    const message = `<p>Welcome <strong>${user.name}</strong>,</p>\n
-    <p>Thank you for signing up for <strong>Telehealth</strong>!</p>\n
-    <p>Your account was successfully created on <strong>${user.createdAt.toLocaleDateString()}</strong> at <strong>${user.createdAt.toLocaleTimeString()}</strong>.</p>\n
-    <p>We're excited to have you on board.</p>\n
-    <p>If you didn't sign up for this account, please contact our support team immediately.</p>\n
-    <p>Best regards,<br><strong>Telehealth Team</strong></p>`;
 
-    sendEmail(user.email, `Welcome to Telehealth, ${user.name}`, message);
-  } catch (error) {
+    // Send welcome email
+    const message = `<p>Welcome <strong>${user.name}</strong>,</p>
+      <p>Thank you for signing up as a <strong>${role}</strong> on <strong>Telehealth</strong>!</p>
+      <p>Your account was created on ${user.createdAt.toLocaleDateString()} at ${user.createdAt.toLocaleTimeString()}.</p>
+      ${
+        role === "doctor" ? `<p>Your specialization: ${specialization}</p>` : ""
+      }
+      <p>Best regards,<br><strong>Telehealth Team</strong></p>`;
+
+    await sendEmail(user.email, `Welcome to Telehealth, ${user.name}`, message);
+  } catch (error: any) {
+    // Handle mongoose validation errors
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map(
+        (val: any) => val.message
+      );
+      res.status(400).json({
+        status: "Fail",
+        message: messages.join(", "),
+      });
+      return;
+    }
+
     res.status(500).json({
       status: "Fail",
-      message: error,
+      message: error.message || "Internal server error",
     });
   }
 };
-
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { email, password }: UserBody = req.body;

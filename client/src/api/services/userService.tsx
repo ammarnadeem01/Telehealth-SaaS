@@ -11,14 +11,17 @@ export const UserService = {
     api.get<ApiResponse<UserDTO[]>>(ENDPOINTS.USERS.GET_DOCTOR_LIST, {
       params,
     }),
-  getById: (id: string) =>
-    api.get<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id)),
+  getById: (params?: {
+    id?: string;
+    // days?: string;
+    // duration?: number;
+  }) => api.get<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL, { params }),
   // create: (userData: Omit<UserDTO, "id" | "createdAt" | "updatedAt">) =>
   //   api.post<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DOCTOR_LIST, userData),
-  update: (id: string, userData: Partial<UserDTO>) =>
-    api.patch<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id), userData),
-  delete: (id: string) =>
-    api.delete<ApiResponse<void>>(ENDPOINTS.USERS.DETAIL(id)),
+  // update: (id: string, userData: Partial<UserDTO>) =>
+  //   api.patch<ApiResponse<UserDTO>>(ENDPOINTS.USERS.DETAIL(id), userData),
+  // delete: (id: string) =>
+  //   api.delete<ApiResponse<void>>(ENDPOINTS.USERS.DETAIL(id)),
   register: (
     userData: Omit<UserDTO, "id" | "createdAt" | "updatedAt"> & {
       password: string;

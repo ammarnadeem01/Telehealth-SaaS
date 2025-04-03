@@ -50,6 +50,8 @@ import Footer from "./components/Footer";
 import PageNotFound from "./pages/User/PageNotFound";
 import { ToastContainer } from "react-toastify";
 import DoctorDetails from "./components/doctor/DoctorDetails";
+import RoleSelection from "./pages/Auth/RoleSelection";
+import DoctorAvailability from "./pages/User/DoctorAvaiability";
 
 function App() {
   const location = useLocation();
@@ -82,9 +84,11 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/doctorlist" element={<DoctorList />} />
         <Route path="/doctor/:id" element={<DoctorDetails />} />
+        <Route path="/doctoravailability" element={<DoctorAvailability />} />
         {/* AUTH */}
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<RoleSelection />} />
+        <Route path="/signup/:role" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/email-sent" element={<EmailSent />} />

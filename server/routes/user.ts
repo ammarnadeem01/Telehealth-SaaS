@@ -11,6 +11,7 @@ import {
   getAllUsers,
   getAllDoctors,
   getAllPatients,
+  getUser,
 } from "@controllers/userControllers";
 const router = Router();
 router.route("/register").post(registerUser);
@@ -21,4 +22,5 @@ router.get("/get-all-patients", getAllPatients);
 router.post("/upload", upload.single("image"), uploadImage);
 router.post("/forgot-password", forogtPassword);
 router.post("/reset-password/:token", resetPassword);
+router.get("/:id", getUser);
 export default router;

@@ -4,7 +4,7 @@ interface Endpoints {
     GET_DOCTOR_LIST: string;
     GET_PATIENT_LIST: string;
     CREATE_DOCTOR: "";
-    DETAIL: (id: string) => string;
+    DETAIL: string;
     REGISTER: string;
     LOGIN: string;
   };
@@ -20,7 +20,7 @@ export const ENDPOINTS: Endpoints = {
     GET_DOCTOR_LIST: `/users/get-all-doctors`,
     GET_PATIENT_LIST: "/users/get-all-patients",
     CREATE_DOCTOR: "",
-    DETAIL: (id: string) => `/users/${id}`,
+    DETAIL: `/users`,
     REGISTER: "/users/register",
     LOGIN: "/users/login",
   },

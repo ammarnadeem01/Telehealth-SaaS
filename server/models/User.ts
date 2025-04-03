@@ -25,6 +25,8 @@ export interface IUser {
   googleRefreshToken?: string;
   googleCalendarId?: string;
   feePerSlot: Number;
+  about?: string;
+  specialization?: string;
   comparePasswords: (passwd: string, comparePasswd: string) => {};
 }
 const userSchema: Schema<IUser> = new Schema(
@@ -93,11 +95,23 @@ const userSchema: Schema<IUser> = new Schema(
     googleCalendarToken: {
       type: String,
     },
+    about: {
+      type: String,
+      required: function () {
+        return this.role === UserRole.Doctor;
+      },
+    },
+    specialization: {
+      type: String,
+      required: function () {
+        return this.role === UserRole.Doctor;
+      },
+    },
     feePerSlot: {
       type: Number,
-      // required: function () {
-      //   return this.role === "doctor";
-      // },
+      required: function () {
+        return this.role === UserRole.Doctor;
+      },
       default: 100,
     },
   },
